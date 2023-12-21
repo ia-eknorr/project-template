@@ -2,50 +2,40 @@
 
 ## Purpose
 
-This project template has been specifically curated for use by the Public Demo team as a base repository for demo vertical development projects, although this can be used and adapted for many projects
+This project template is designed as a base repository for any project, and can be adapted for any purpose.
+
+## Getting started
+
+If you are new to version control or just haven't used it in awhile, the following documents may be useful to get you started.
+
+* [Git Style Guide](https://github.com/ia-eknorr/ignition-git-style-guide)
+* [IA Version Control Documentation](https://github.com/ia-eknorr/ignition-version-control)
+
+It is assumed that the following have been installed and set up before spinning up this stack:
+
+* [Proper workstation setup](https://github.com/ia-eknorr/ignition-version-control/blob/main/Workstation%20Setup.md)
+  * Git
+  * Github CLI
+  * Visual Studio Code
+* Docker
+* [Traefik reverse proxy](https://github.com/ia-eknorr/traefik-reverse-proxy)
 
 ## How To Use
 
-### Instantiate this template repo
+### Create local repository
 
-1. Navigate to [this](https://github.com/inductive-automation/demo-vertical-base) base repository
-2. Select "Use this template"
-   * Include all branches: `False`
-   * Owner: `inductive-automation`
-   * Repository Name: `<unique-repository-name`
-   * Internal/Private: `Private`
-   * "Create repository"
-3. Create local repository
-   * Create folder for repository
-   * Run `git clone <repository-link>`
+* Create folder for repository
+* Run `git clone <repository-link>`
 
 ### Update the stack
 
-> :memo: **_Note_**: This will be different for each project. Below are recommended changes, but not everything may be applicable.
+> :memo: **_Note_**: This will be different for each project. Below are suggested changes, but not everything may be applicable.
 
 1. `.env`
-   | Variable           | Value                          |
-   |--------------------|--------------------------------|
-   | `ENV`              | "dev", "test", "prod"          |
-   | `GATEWAY_NAME`     | "demo-vertical-<vertical-name>"|
-   | `IGNITION_VERSION` | "8.1.x"                        |
-   | `IGNITION_PROJECT` | "VerticalProjectName"          |
-   | `MYSQL_VERSION`    | "8.0.33"                       |
-   | `MYSQL_USER`       | "ignition"                     |
-   | `MYSQL_PASSWORD`   | "ignition"                     |
-   | `MYSQL_DATABASE`   | "VerticalDbName"               |
+   Update, add, or delete these variables as needed. The ones currently in this file are added as examples.
 
 2. `db-init`
-   > :memo: **_Note_**: Sub-folders `db-setup`, `tables`, and `seed-data` can each contain any number of .sql files, based on how it best makes sense to organize the project. During stack startup, scripts in these folders will be executed in batch in the following order: `db-setup`, `tables`, `seed-data`. During batch execution, scripts within each folder will be run alphanumerically. See the default files `db-init` for a full example.
-
-   * `db-init/db-setup`
-      * Create databases
-      * Create users
-      * Grant permissions
-   * `db-init/tables`
-      * Create tables in database
-   * `db-init/seed-data`
-      * Insert initial data needed for the project
+   Place .sql files containing database instantiation in the following folders. These sql scripts will be be run alphanumerically on startup.
 
 3. `gw-projects`
    * For a new project
@@ -54,32 +44,22 @@ This project template has been specifically curated for use by the Public Demo t
    * For an existing project
       * Delete `gw-projects/ExampleProject` and replace it with the existing _unzipped_ project export.
 
-4. Add secrets to github repository
-   > :memo: **_Note_** This must be done in order for the `publish-and-update.yml` workflow to run properly. See FAQ below for more information.
-
-   * Open Github project repository
-   * Navigate to Settings > Secrets and variables > Actions
-   * Add "New repository secret"
-     * Name: `PUBLIC_DEMO_DEV_TOKEN`
-     * Secret: As @ia-eknorr for access to 1pass link
-   * Click "Add secret"
-
-5. `readme.md`
+4. `readme.md`
    > :memo: **_Note_**: Your project should have a readme that contains information about the project, helpful links, and anything else you think would be useful. `sample-readme.md` has been added as an example.
 
    * Update `sample-readme.md` with pertinent information for the project.
    * Delete (or rename) this document, `readme.md`.
    * Rename `sample-readme.md` to `readme.md`.
 
-6. `docs` (Optional)
+5. `docs` (Optional)
    * Place any useful or pertinent documentation to your project here, such as an `installation-guide.md`
 
-7. `module-init` (Optional)
+6. `module-init` (Optional)
 
    * Used for any necessary 3rd party modules.
    * See `module-init/readme.md` to learn more about how to use this folder.
 
-8. `secrets` (Optional)
+7. `secrets` (Optional)
    * Used for sensitive information like passwords, tokens, etc.
    * See `secrets/readme.md` to learn more about how to use this folder.
 
@@ -103,18 +83,16 @@ This project template has been specifically curated for use by the Public Demo t
 
 ### FAQ
 
-**How can I connect to a database management software like MySQL Workbench?**
+**How can I connect to a database management software like PGAdmin?**
 
-* In `docker-compose.yml`, uncomment services.mysql-db.ports and the definition of ports on the next line.
+* In `docker-compose.yml`, uncomment services.db.ports and the definition of ports on the next line.
 * Adjust the port to desired port map
 * Run `docker-compose up -d` to update the stack.
 
-**What is `scripts/create-release-package`?**
+### Questions? Requests?
 
-When a new release is made, the github workflow `publish-and-update` is run. This wraps up the project into a package that can be uploaded to the Ignition Exchange and updates the Public Demo repository with the latest release. For most Vertical Demo Stacks, this shouldn't need to be updated. Ask @ia-eknorr for more information.
+If you have any questions or notice something that doesn't look right, open an issue or submit a pull request.
 
-**How can I use a different version of MySQL other than 8.0.33?**
+### Cred
 
-* Replace `db-init/mysql-connector-j-8.0.33.jar` with the appropriate driver for the version.
-* In `docker-compose.yml`, update `services.liquibase.volumes` with the updated _relative path_ for the driver, as well as the location in the container on this same line.
-* Run `docker-compose up -d` to update the stack.
+Much inspiration for all of this was taken from [Kevin Collins](https://github.com/thirdgen88) as well as [Design group](https://github.com/design-group). There is nothing here they haven't already done, I just put it in one place.

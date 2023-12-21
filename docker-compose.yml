@@ -38,9 +38,9 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_DB: datadash 
-      POSTGRES_USER: ignition
-      POSTGRES_PASSWORD: ignition
+      POSTGRES_DB: ${POSTGRES_DB} 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD", "pg_isready", "-h", "localhost", "-U", "ignition"]
       interval: 10s
