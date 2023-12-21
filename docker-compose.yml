@@ -1,0 +1,64 @@
+services:
+  gateway:
+    image: inductiveautomation/ignition:${IGNITION_VERSION}
+    container_name: ${GATEWAY_NAME}
+    user: 0:0
+    volumes:
+      # Gateway backup
+      - ./gw-init/gateway.gwbk:/restore.gwbk
+      # Ignition data
+      - ignition-data:/usr/local/bin/ignition/data
+      # Ignition project
+      - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
+    labels:
+      - traefik.enable=true
+      - traefik.hostname=${GATEWAY_NAME}
+    environment:
+      - ACCEPT_IGNITION_EULA=Y
+      - IGNITION_EDITION=standard
+      - DISABLE_QUICKSTART=true
+      - TZ=America/Los_Angeles
+      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua
+    command: >
+      -n ${GATEWAY_NAME}
+      -h 80
+      -s 443
+      -a ${GATEWAY_NAME}.localtest.me
+      -r /restore.gwbk
+      --
+      -Dignition.projects.scanFrequency=10
+    networks:
+      - default
+  
+  db:
+    image: postgres:16.1
+    hostname: db-${GATEWAY_NAME}
+    container_name: db-${GATEWAY_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: datadash 
+      POSTGRES_USER: ignition
+      POSTGRES_PASSWORD: ignition
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-U", "ignition"]
+      interval: 10s
+      timeout: 20s
+      retries: 10
+    # Uncomment on local for database management. Connections can be made at datadash-db.localtest.me:5430, or whichever port you set
+    #ports:
+    #  - "5430:5432"
+    networks:
+      default:
+        aliases: 
+          - db-${GATEWAY_NAME}
+networks:
+  default:
+    external: true
+    name: proxy
+
+volumes:
+  ignition-data:
+  db-data:
+

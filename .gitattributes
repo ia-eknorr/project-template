@@ -1,0 +1,9 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text eol=lf
+
+#verify that some files eol dont change and corrupt the file
+*.png binary
+*.gwbk binary
+*.bin binary
+*.modl binary
+*.jar binary
