@@ -1,9 +1,6 @@
-# Datacenter Demo Development
+# My Project Development Stack
 
-This repository will be used as a development stack to build the Datacenter Vertical Stack.
-
-* [Asana Board](https://app.asana.com/0/1205762333519576/1205762494150359)
-* [Lucid Planning Board](https://lucid.app/lucidchart/69276e0b-15bb-4369-884b-456959253406/edit?view_items=irXGPhgckLLW&invitationId=inv_c0c40e9e-db34-4429-89ae-e9a6105953b0)
+This repository will be used as a development stack for...
 
 ## Reference Docs
 
@@ -18,6 +15,40 @@ This repository will be used as a development stack to build the Datacenter Vert
   * Visual Studio Code
 * Docker
 * [Traefik reverse proxy](https://github.com/ia-eknorr/traefik-reverse-proxy)
+* [Optional] PGAdmin
+
+     <details>
+     <summary>Example Docker Compose</summary>
+
+      version: '3.8'
+
+      services:
+        pgadmin:
+        image: dpage/pgadmin4
+        container_name: pgadmin
+        environment:
+          PGADMIN_DEFAULT_EMAIL: my-email@example.com
+          PGADMIN_DEFAULT_PASSWORD: ignition
+        ports:
+          - "5050:80"
+        labels:
+          - traefik.enable=true
+          - traefik.hostname=pgadmin
+        restart: always
+        volumes:
+          - pgadmin-data:/var/lib/pgadmin
+        networks:
+          - default
+
+      networks:
+        default:
+          external: true
+          name: proxy
+
+      volumes:
+        pgadmin-data:
+
+</details>
 
 ## How to use
 
@@ -25,10 +56,10 @@ This repository will be used as a development stack to build the Datacenter Vert
 
     ```bash
     cd /path/to/project
-    git clone https://github.com/ia-salesengineering/demo-vertical-datacenter.git .
+    git clone <github-repository-link> .
     ```
 
-    > :memo: **_Note_**: It is recommended that the `path/to/project` mentioned above is organized as `projects/active/demo-vertical-datacenter`, or similar project name.
+    > :memo: **_Note_**: It is recommended that the `path/to/project` mentioned above is organized as `projects/active/my-project-name`, or similar project name.
 
 2. Spin up Docker stack
 
@@ -40,12 +71,11 @@ This repository will be used as a development stack to build the Datacenter Vert
 
     **Example**
 
-    ```bash
-    http://demo-vertical-datacenter-dev.localtest.me/
-    
+    [http://example-gateway.localtest.me](http://example-gateway.localtest.me)
+
     or
-    [container-name].localtest.me 
-    ```
+
+    [container-name].localtest.me
 
     Container name(s) can be checked in Docker Desktop or by the following command
 
