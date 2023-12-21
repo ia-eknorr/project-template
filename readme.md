@@ -4,6 +4,22 @@
 
 This project template is designed as a base repository for any project, and can be adapted for any purpose.
 
+## Getting started
+
+If you are new to version control or just haven't used it in awhile, the following documents may be useful to get you started.
+
+* [Git Style Guide](https://github.com/ia-eknorr/ignition-git-style-guide)
+* [IA Version Control Documentation](https://github.com/ia-eknorr/ignition-version-control)
+
+It is assumed that the following have been installed and set up before spinning up this stack:
+
+* [Proper workstation setup](https://github.com/ia-eknorr/ignition-version-control/blob/main/Workstation%20Setup.md)
+  * Git
+  * Github CLI
+  * Visual Studio Code
+* Docker
+* [Traefik reverse proxy](https://github.com/ia-eknorr/traefik-reverse-proxy)
+
 ## How To Use
 
 ### Create local repository
@@ -72,3 +88,11 @@ This project template is designed as a base repository for any project, and can 
 * In `docker-compose.yml`, uncomment services.db.ports and the definition of ports on the next line.
 * Adjust the port to desired port map
 * Run `docker-compose up -d` to update the stack.
+
+### Questions? Requests?
+
+If you have any questions or notice something that doesn't look right, open an issue or submit a pull request.
+
+### Cred
+
+Much inspiration for all of this was taken from [Kevin Collins](https://github.com/thirdgen88) as well as [Design group](https://github.com/design-group). There is nothing here they haven't already done, I just put it in one place.
