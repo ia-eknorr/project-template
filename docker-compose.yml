@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: inductiveautomation/ignition:8.1.33
+    image: inductiveautomation/ignition:8.1.35
     container_name: ${GATEWAY_NAME}
     user: 0:0
     volumes:
