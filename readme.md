@@ -95,4 +95,4 @@ If you have any questions or notice something that doesn't look right, open an i
 
 ### Cred
 
-Much inspiration for all of this was taken from [Kevin Collins](https://github.com/thirdgen88) as well as [Design group](https://github.com/design-group). There is nothing here they haven't already done, I just put it in one place.
+Much inspiration for all of this was taken from [Kevin Collins](https://github.com/thirdgen88) as well as [Design Group](https://github.com/design-group). There is nothing here they haven't already done, I just put it in one place.
