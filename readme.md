@@ -81,6 +81,19 @@ It is assumed that the following have been installed and set up before spinning 
    docker-compose up -d
    ```
 
+## Updating this Development Environment
+
+The configuration baked into each of the `gw-init/*.gwbk` gateway files is setup to connect to other development resources in this environment.  When updating elements of the base configuration, it is important that the projects are not part of the captured GWBK's.  Below is a sequence of steps to update the environment's GWBK's:
+
+1. Bring the solution online and make the needed configuration changes.
+2. Run the following script to take a gateway backup of the container and strip the gateway projects
+
+   ```bash
+   bash scripts/download-gateway-backups.sh
+   ```
+
+3. Commit the new backup to source control.
+
 ### FAQ
 
 **How can I connect to a database management software like PGAdmin?**

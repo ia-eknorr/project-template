@@ -6,7 +6,7 @@ declare -a CONTAINERS
 
 strip_gwbk() {
     ZIP_FILE="$1"
-    zip -q -d "${ZIP_FILE}" "projects/" > /dev/null 2>&1 || \
+    zip -q -d "${ZIP_FILE}" "projects/**" "projects/" > /dev/null 2>&1 || \
         if [[ ${ZIP_EXIT_CODE:=$?} == 12 ]]; then \
             echo "INFO: No projects folder found in gwbk ${ZIP_FILE}."; \
         else \
