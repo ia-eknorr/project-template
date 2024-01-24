@@ -17,6 +17,8 @@ services:
       - ACCEPT_IGNITION_EULA=Y
       - IGNITION_EDITION=standard
       - DISABLE_QUICKSTART=true
+      - IGNITION_UID=2003
+      - IGNITION_GID=2003
       - TZ=America/Los_Angeles
       - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua
     command: >
