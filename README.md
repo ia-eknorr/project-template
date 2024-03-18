@@ -138,7 +138,6 @@ Since tags may be changed frequently, this script has been written to be very st
 | --host \<host>          | Specify the target host                                                                | project directory | `--host my-hostname`           |
 | -h, --help              | Display script usage help                                                              | -                 | `-h` or `--help`               |
 
-
 See [Design Group Tag CICD Module](https://github.com/design-group/ignition-tag-cicd-module) for more details on collision policy
 
 **Example:**
