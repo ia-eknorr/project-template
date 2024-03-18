@@ -16,7 +16,7 @@ This repository will be used as a development stack for...
 * Docker
 * [Traefik reverse proxy](https://github.com/ia-eknorr/traefik-reverse-proxy)
 * [Optional] PGAdmin
-
+<!-- markdownlint-disable MD046 -->
      <details>
      <summary>Example Docker Compose</summary>
 
@@ -49,6 +49,7 @@ This repository will be used as a development stack for...
         pgadmin-data:
 
 </details>
+<!-- markdownlint-enable MD046 -->
 
 ## How to use
 
