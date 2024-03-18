@@ -29,7 +29,8 @@ It is assumed that the following have been installed and set up before spinning 
 
 ### Update the stack
 
-> :memo: **_Note_**: This will be different for each project. Below are suggested changes, but not everything may be applicable.
+> [!NOTE]
+> This will be different for each project. Below are suggested changes, but not everything may be applicable.
 
 1. `.env`
    Update, add, or delete these variables as needed. The ones currently in this file are added as examples.
@@ -45,7 +46,8 @@ It is assumed that the following have been installed and set up before spinning 
       * Delete `gw-projects/ExampleProject` and replace it with the existing _unzipped_ project export.
 
 4. `readme.md`
-   > :memo: **_Note_**: Your project should have a readme that contains information about the project, helpful links, and anything else you think would be useful. `sample-readme.md` has been added as an example.
+   > [!TIP]
+   > Your project should have a readme that contains information about the project, helpful links, and anything else you think would be useful. `sample-readme.md` has been added as an example.
 
    * Update `sample-readme.md` with pertinent information for the project.
    * Delete (or rename) this document, `readme.md`.
@@ -93,6 +95,62 @@ The configuration baked into each of the `gw-init/*.gwbk` gateway files is setup
    ```
 
 3. Commit the new backup to source control.
+
+## Updating tags
+
+This environment uses Design Group's Tag CI/CD module, meaning tags can be exported and imported using `scripts/tag-import.sh` and `scripts/tag-export.sh`. Tags are saved in The tags have been stripped from the project, and are imported using the `tag-import` when the docker-compose file is started so that tags are automatically imported to the gateway.
+
+**Prerequisites:**
+
+* Bash environment
+* curl command
+
+### `scripts/tag-export.sh`
+
+Since tags may be changed frequently, this script has been written to be very straightforward without any options or arguments. By default, this script creates two files:
+
+* \_types_.json: Export of the tag data types
+* Exchange.json: Export of the "Exchange" tag instances folder
+
+    > [!TIP]
+    > For use in other projects, `initialize.sh` can be edited to accommodate other folders as needed.
+
+#### How to use
+
+1. Run the export script
+
+    ```bash
+    bash scripts/tag-export.sh 
+    ```
+
+2. Commit the newly created (or modified) files
+
+### `scripts/tag-import.sh`
+
+**Options:**
+
+| Option                  | Description                                                                            | Default Value     | Example Usage                  |
+|-------------------------|----------------------------------------------------------------------------------------|-------------------|--------------------------------|
+| --provider \<provider>  | Set the provider                                                                       | default           | `--provider my_provider`   |
+| --policy \<policy>      | Set the collision policy (a, o, u, d)                                                  | a                 | `--policy o`                   |
+| --file, -f \<file_path> | Specify the file (path/to/file.json) or path to directory with multiple .json files    | -                 | `--file path/to/file.json`     |
+| --force                 | Force overwrite if collision policy is set to 'o'                                      | -                 | `--force`                      |
+| --host \<host>          | Specify the target host                                                                | project directory | `--host my-hostname`           |
+| -h, --help              | Display script usage help                                                              | -                 | `-h` or `--help`               |
+
+
+See [Design Group Tag CICD Module](https://github.com/design-group/ignition-tag-cicd-module) for more details on collision policy
+
+**Example:**
+
+```bash
+bash scripts/tag-import.sh --provider my_provider --host demo-vertical-dev --policy o --file /path/to/tags --force
+```
+
+**Logging:**
+
+* The script logs import status in the `tags/tag-import.log` file. After import, see this file for more information.
+* If using the tag-import container to import, verbose logs can be found in that docker container.
 
 ### FAQ
 
