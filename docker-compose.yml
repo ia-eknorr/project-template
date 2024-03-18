@@ -4,11 +4,8 @@ services:
     container_name: ${GATEWAY_NAME}
     user: 0:0
     volumes:
-      # Gateway backup
       - ./gw-init/gateway.gwbk:/restore.gwbk
-      # Ignition data
       - ignition-data:/usr/local/bin/ignition/data
-      # Ignition project
       - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
     labels:
       - traefik.enable=true
