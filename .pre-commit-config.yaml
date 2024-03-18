@@ -1,0 +1,44 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: Shell Lint
+        entry: shellcheck
+        language: system
+        types: [shell]
+        files: \.sh$
+
+      - id: markdownlint
+        name: Markdown Lint
+        entry: markdownlint
+        language: system
+        types: [markdown]
+        args: [
+          "--config=.markdownlint.json",
+          "--ignore-path=.markdownlintignore"
+        ]
+
+      - id: pylint
+        name: pylint
+        entry: pylint
+        files: .*code\.py$
+        language: system
+        types: [python]
+        args:
+          [
+            "--rcfile=.pylintrc",
+            "--msg-template='{path}:\n  Line {line}: {msg_id}: {msg}'"
+          ]
+
+      - id: yamllint
+        name: YAML Lint
+        entry: yamllint
+        # files: \.yml$
+        language: system
+        types: [yaml]
+        args:
+          [
+            "--config-file=.yamllint.yml",
+            "--format=standard"
+          ]

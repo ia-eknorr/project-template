@@ -1,15 +1,21 @@
+---
+version: "3.8"
+
+x-ignition-common: &ignition-common
+  image: inductiveautomation/ignition:8.1.38
+  user: 0:0
+  networks:
+    - default
+
 services:
   gateway:
-    image: inductiveautomation/ignition:${IGNITION_VERSION}
+    <<: *ignition-common
     container_name: ${GATEWAY_NAME}
-    user: 0:0
     volumes:
-      # Gateway backup
       - ./gw-init/gateway.gwbk:/restore.gwbk
-      # Ignition data
       - ignition-data:/usr/local/bin/ignition/data
-      # Ignition project
       - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
+      - ./module-init/Tag-CICD.modl:/usr/local/bin/ignition/user-lib/modules/Tag-CICD.modl
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
@@ -17,8 +23,10 @@ services:
       - ACCEPT_IGNITION_EULA=Y
       - IGNITION_EDITION=standard
       - DISABLE_QUICKSTART=true
+      - IGNITION_UID=2003
+      - IGNITION_GID=2003
       - TZ=America/Los_Angeles
-      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua
+      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua,sql-bridge,alarm-notification
     command: >
       -n ${GATEWAY_NAME}
       -h 80
@@ -27,18 +35,31 @@ services:
       -r /restore.gwbk
       --
       -Dignition.projects.scanFrequency=10
-    networks:
-      - default
-  
+      -Dignition.allowunsignedmodules=true
+
+  tag-import:
+    <<: *ignition-common
+    depends_on:
+      gateway:
+        condition: service_healthy
+    environment:
+      - TZ=America/Los_Angeles
+    entrypoint: []
+    command: >
+      tag-import.sh -f /tags --host ${GATEWAY_NAME} --policy d --force
+    volumes:
+      - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
+      - ./tags:/tags
+
   db:
-    image: postgres:16.1
+    image: postgres:16.2
     hostname: db-${GATEWAY_NAME}
     container_name: db-${GATEWAY_NAME}
     volumes:
       - db-data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_DB: ${POSTGRES_DB} 
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
@@ -47,11 +68,11 @@ services:
       timeout: 20s
       retries: 10
     # Uncomment on local for database management. Connections can be made at datadash-db.localtest.me:5430, or whichever port you set
-    #ports:
-    #  - "5430:5432"
+    # ports:
+    #   - "5430:5432"
     networks:
       default:
-        aliases: 
+        aliases:
           - db-${GATEWAY_NAME}
 networks:
   default:
@@ -61,4 +82,3 @@ networks:
 volumes:
   ignition-data:
   db-data:
-
