@@ -15,6 +15,7 @@ services:
       - ./gw-init/gateway.gwbk:/restore.gwbk
       - ignition-data:/usr/local/bin/ignition/data
       - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
+      - ./module-init/Tag-CICD.modl:/usr/local/bin/ignition/user-lib/modules/Tag-CICD.modl
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
