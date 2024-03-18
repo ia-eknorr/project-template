@@ -4,8 +4,8 @@ name: Linter
 on:
   push:
   pull_request:
-  branches: [main]
-  types: [closed]
+    branches: [main]
+    types: [closed]
 
 jobs:
   shellcheck:
