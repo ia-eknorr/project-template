@@ -20,7 +20,7 @@ services:
       - traefik.hostname=${GATEWAY_NAME}
     environment:
       - ACCEPT_IGNITION_EULA=Y
-      - IGNITION_EDITION=maker
+      - IGNITION_EDITION=standard
       - DISABLE_QUICKSTART=true
       - IGNITION_UID=2003
       - IGNITION_GID=2003
