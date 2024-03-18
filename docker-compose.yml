@@ -51,7 +51,7 @@ services:
       - ./tags:/tags
 
   db:
-    image: postgres:16.1
+    image: postgres:16.2
     hostname: db-${GATEWAY_NAME}
     container_name: db-${GATEWAY_NAME}
     volumes:
