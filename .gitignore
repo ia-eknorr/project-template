@@ -1,3 +1,6 @@
+# Tag import log
+tags/*.log
+
 # VSCode workspace
 *.code-workspace
 

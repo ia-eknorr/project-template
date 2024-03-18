@@ -1,0 +1,13 @@
+{
+  "name": "Exchange",
+  "tagType": "Folder",
+  "tags": [
+    {
+      "dataType": "String",
+      "name": "readme",
+      "tagType": "AtomicTag",
+      "value": "Create your tags in a folder with the same name as the vertical, then follow the instructions in the readme to update tags in the dev stack",
+      "valueSource": "memory"
+    }
+  ]
+}

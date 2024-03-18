@@ -1,8 +1,16 @@
+---
+version: "3.8"
+
+x-ignition-common: &ignition-common
+  image: inductiveautomation/ignition:8.1.38
+  user: 0:0
+  networks:
+    - default
+
 services:
   gateway:
-    image: inductiveautomation/ignition:8.1.36
+    <<: *ignition-common
     container_name: ${GATEWAY_NAME}
-    user: 0:0
     volumes:
       - ./gw-init/gateway.gwbk:/restore.gwbk
       - ignition-data:/usr/local/bin/ignition/data
@@ -17,7 +25,7 @@ services:
       - IGNITION_UID=2003
       - IGNITION_GID=2003
       - TZ=America/Los_Angeles
-      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua
+      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua,sql-bridge,alarm-notification
     command: >
       -n ${GATEWAY_NAME}
       -h 80
@@ -26,9 +34,22 @@ services:
       -r /restore.gwbk
       --
       -Dignition.projects.scanFrequency=10
-    networks:
-      - default
-  
+      -Dignition.allowunsignedmodules=true 
+
+  tag-import:
+    <<: *ignition-common
+    depends_on:
+      gateway:
+        condition: service_healthy
+    environment:
+      - TZ=America/Los_Angeles
+    entrypoint: []
+    command: >
+      tag-import.sh -f /tags --host ${GATEWAY_NAME} --policy d --force
+    volumes:
+      - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
+      - ./tags:/tags
+
   db:
     image: postgres:16.1
     hostname: db-${GATEWAY_NAME}
