@@ -15,6 +15,8 @@ services:
       - ./gw-init/gateway.gwbk:/restore.gwbk
       - ignition-data:/usr/local/bin/ignition/data
       - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
+      - ./module-init/Tag-CICD.modl:/usr/local/bin/ignition/user-lib/modules/Tag-CICD.modl
+      - ./module-init/MQTT-Engine-signed.modl:/usr/local/bin/ignition/user-lib/modules/MQTT-Engine.modl
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
@@ -45,7 +47,7 @@ services:
       - TZ=America/Los_Angeles
     entrypoint: []
     command: >
-      tag-import.sh -f /tags --host ${GATEWAY_NAME}-be-${ENV} --policy d --force
+      tag-import.sh -f /tags --host ${GATEWAY_NAME} --policy d --force
     volumes:
       - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
       - ./tags:/tags
