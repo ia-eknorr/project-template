@@ -1,0 +1,58 @@
+---
+name: Linter
+
+on:
+  push:
+  pull_request:
+  branches: [main]
+  types: [closed]
+
+jobs:
+  shellcheck:
+    name: Lint Shell Files
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+  markdownlint:
+    name: Lint Markdown
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '19.x'
+      - name: Install dependencies
+        run: |
+          npm install -g markdownlint-cli
+      - name: Run markdownlint
+        run: 'find . -name "*.md" | xargs markdownlint'
+
+  yamllint:
+    name: Lint YAML files
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run yamllint
+        run: 'find . -name "*.yml" | xargs yamllint'
+
+  lint-ignition-views:
+    name: Lint Ignition Views
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v43
+        with:
+          files: |
+            **/view.json
+      - name: Run lint-ignition-views.py
+        uses: ia-eknorr/ignition-lint@v1.1.1
+        with:
+          files: ${{ steps.changed-files.outputs.all_changed_files }}
+          component_style: PascalCase
+          parameter_style: camelCase
