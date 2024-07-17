@@ -128,8 +128,8 @@ while true; do
             pull_start_containers "${PROJECT_NAME}" "${PROJECT_NAME}" ./docker-compose.yml;
             break;;
         [nN]* ) 
-            printf '\n On Mac, please run: \n docker compose pull && docker compose up -d'
-            printf '\n In WSL, please run: \n docker-compose pull && docker-compose up -d'
+            printf '\n Please run: \n docker compose pull && docker compose up -d'
+            printf '\n If running an older version of docker compose, you may need to run: \n docker-compose pull && docker-compose up -d'
             printf '\n Once the container is started, in a web browser, access the gateway at http://%s.localtest.me' ${PROJECT_NAME}
             break;;
         * ) 
