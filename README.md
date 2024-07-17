@@ -85,7 +85,9 @@ It is assumed that the following have been installed and set up before spinning 
 
 ## Updating this Development Environment
 
-The configuration baked into each of the `gw-init/*.gwbk` gateway files is setup to connect to other development resources in this environment.  When updating elements of the base configuration, it is important that the projects are not part of the captured GWBK's.  Below is a sequence of steps to update the environment's GWBK's:
+The configuration baked into each of the `gw-init/*.gwbk` gateway files is setup to connect to other development resources in this environment. When updating elements of the base configuration, it is important that the projects are not part of the captured GWBK's. Below are two sequences of steps to update the environment's GWBK's (depending on system):
+
+### MacOS and Windows WSL
 
 1. Bring the solution online and make the needed configuration changes.
 2. Run the following script to take a gateway backup of the container and strip the gateway projects
@@ -95,6 +97,26 @@ The configuration baked into each of the `gw-init/*.gwbk` gateway files is setup
    ```
 
 3. Commit the new backup to source control.
+
+### Windows with Docker Desktop
+
+1. Bring the solution online and make the needed configuration changes.
+2. Take a gateway backups and **replace** the .gwbk in `gw-init/`.
+3. Run the following command to strip out the projects from all .gwbk files in the `gw-init` directory:
+   * On Windows Powershell:
+
+        ```bash
+        docker run --rm -u root -v ${PWD}\gw-init:/gw-init -it --entrypoint bash inductiveautomation/ignition:8.1.42 -c "cd /gw-init; ./strip-projects-from-gwbk.sh -a"
+        ```
+
+   * On Windows CMD:
+
+        ```bash
+        docker run --rm -u root -v %cd%\gw-init:/gw-init -it --entrypoint bash inductiveautomation/ignition:8.1.42 -c "cd /gw-init; ./strip-projects-from-gwbk.sh -a"
+        ```
+
+4. The output should reflect whether any projects folders were removed from the .gwbk's.  They're now ready to commit to source control.
+5. Commit the new backup to source control.
 
 ### FAQ
 
