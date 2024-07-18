@@ -1,191 +1,186 @@
 #!/bin/bash
+set -eo pipefail
+
+#####################
+# Tag Import Script #
+# Version: 4.0      #
+# Date: 2024-04-05  #
+#####################
 
 # Set default values for optional arguments
 DEFAULT_PROVIDER="default"
-DEFAULT_POLICY="a"
+DEFAULT_POLICY="o"
 
 # Initialize variables
 PROVIDER="$DEFAULT_PROVIDER"
 POLICY="$DEFAULT_POLICY"
 RESTORED_FILES=0
-FILE_PATH=""
-FORCE_FLAG=false
-HOST=""
-LOG_FILE="tags/tag-import.log"
+AUTO_PROVIDER=false
+FORCE=false
+DEBUG=false
 
 # Function to display script usage
 display_help() {
-    echo "Usage: $0 [options]"
-    echo "Options:"
-    echo "  --provider <provider>   Set the provider (default: $DEFAULT_PROVIDER)"
-    echo "  --policy <policy>       Set the collision policy (default: $DEFAULT_POLICY)"
-    echo "  --file, -f <file_path>  Specify the file or directory path to import"
-    echo "  --force                 Force overwrite if collision policy is set to 'o'"
-    echo "  --host <host>           Specify the host"
-    echo "  -h, --help              Display this help message"
-    exit 0
+  echo "Usage: $0 [options] <gateway_base_url>"
+  echo "Options:"
+  echo "  -p, --provider <provider>   Set the provider (default: $DEFAULT_PROVIDER)"
+  echo "  -c, --policy <policy>       Set the collision policy (default: $DEFAULT_POLICY)"
+  echo "  -d, --directory <path>      Specify the directory path to import"
+  echo "  -a, --auto                  Automatically import tags from all providers in the specified directory"
+  echo "  --force                     Force overwrite if collision policy is set to 'o'"
+  echo "  --debug                     Enable debug mode"
+  echo "  -h, --help                  Display this help message"
+  exit 0
 }
 
-check_arguments() {
-    if [ -z "$FILE_PATH" ]; then
-        echo "Error: File path is required. Use --file or -f to specify the file path."
-        exit 1
-    fi
-}
+parse_arguments() {
+  # If -d or --directory is not specified, flag error and exit
+  if [ -z "$DIRECTORY_PATH" ]; then
+    echo "Error: Directory path is required. Use --directory or -d to specify the directory path."
+    exit 1
+  fi
 
-confirm_overwrite() {
+  # If --policy is set to 'o' or 'd' and --force != true, confirm overwrite
+  if [[ ("$POLICY" == "o" || "$POLICY" == "d") && "$FORCE" == "false" ]]; then
     read -r -p "You've set POLICY to 'o' (overwrite) or 'd' (delete overwrite). Do you want to proceed? (y/n): " response
     case "$response" in
-        [yY][eE][sS]|[yY])
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
+      [yY][eE][sS]|[yY])
+        :
+        ;;
+      *)
+        exit 1
+        ;;
     esac
+  fi
 }
 
-log_import_status() {
-    local timestamp
-    timestamp=$(date +"%Y-%m-%d %H:%M:%S %Z")
-
-    if [ ! -e "$LOG_FILE" ]; then
-        printf "%-30s %-30s %-30s\n" "Timestamp" "File" "Status" >> "$LOG_FILE"
-    fi
-
-    printf "%-30s %-30s %-30s\n" "$timestamp" "$1" "$2" >> "$LOG_FILE"
+adjust_file_path() {
+  local path="$1"
+  if [ ! -f /.dockerenv ]; then
+    echo "/${path}"
+  else
+    echo "${path}"
+  fi
 }
 
 construct_url() {
-    local baseTagPath="$1"
-    local hostname
-
-    # Determine the host based on the environment
-    if [ -f /.dockerenv ]; then
-        hostname="${HOST}:8088"
-    else
-        hostname="${HOST}.localtest.me"
-    fi
-
-    # Construct the URL with or without baseTagPath
-    if [ -z "$baseTagPath" ]; then
-        echo "http://${hostname}/data/tag-cicd/tags/import?provider=${PROVIDER}&collisionPolicy=${POLICY}"
-    else
-        echo "http://${hostname}/data/tag-cicd/tags/import?provider=${PROVIDER}&baseTagPath=${baseTagPath}&collisionPolicy=${POLICY}"
-    fi
+  local gateway_base_url="$1"
+  local provider="$2"
+  local directory_path="$3"
+  echo "${gateway_base_url}/data/tag-cicd/tags/import?provider=${provider}&baseTagPath=&collisionPolicy=${POLICY}&recursive=true&individualFilesPerObject=true&filePath=${directory_path}/"
 }
 
-post_tags() {
-    local file_path
-    file_path=$1
-    local file_name
-    file_name=$(basename -- "$file_path")
-    local baseTagPath
-    
-    if [[ "$file_name" =~ (_types_|_.*_)\.json ]]; then
-        baseTagPath=""
-    else
-        baseTagPath="${file_name%.*}"
-    fi
-    
-    if [ -f "$file_path" ]; then
-        curl_response=$(curl -sS -X POST -H "Content-Type: application/json" -d @"$file_path" "$(construct_url "$baseTagPath")")
-        echo "$curl_response"
-        ((RESTORED_FILES++))
-
-        # Extract and count status types using regex
-        good_count=$(echo "$curl_response" | grep -o 'Good' | wc -l)
-        bad_failure_count=$(echo "$curl_response" | grep -o 'Bad_Failure' | wc -l)
-        
-        # Display the report at the end of each file
-        echo -e "\nImport Status Report for $file_path:"
-        echo "Good: $good_count"
-        echo "Bad_Failure: $bad_failure_count"
-        
-        # Log the status report in the log file
-        log_import_status "$file_path" "Good: ${good_count} Bad_Failure: ${bad_failure_count}"
-
-    else
-        echo "Error: Invalid file or directory path: $file_path"
-        exit 1
-    fi
+construct_root_dir_url() {
+  local gateway_base_url="$1"
+  local provider="$2"
+  echo "${gateway_base_url}/data/tag-cicd/tags/import?provider=${provider}&baseTagPath=&collisionPolicy=o"
 }
 
 import_tags() {
-    # Check if the path is a directory
-    if [ -d "$FILE_PATH" ]; then
-        # Check if _types_.json exists
-        if [ -e "$FILE_PATH/_types_.json" ]; then
-            post_tags "$FILE_PATH/_types_.json"
-        fi
+  local gateway_base_url="$1"
+  local provider="$2"
+  local directory_path="$3"
+  local url
 
-        # Process other JSON files
-        for json_file in "$FILE_PATH"/*.json; do
-            # Skip _types_.json as they have already been processed
-            if [ "$json_file" != "$FILE_PATH/_types_.json" ]; then
-                post_tags "$json_file"
-            fi
-        done
+  if [ "$DEBUG" = true ]; then echo "Importing directory: $directory_path"; fi
+  url=$(construct_url "$gateway_base_url" "$provider" "$directory_path")
+  if [ "$DEBUG" = true ]; then echo "  URL: $url"; fi
+  curl_response=$(curl -sS -X POST "$url")
+  RESTORED_FILES=$((RESTORED_FILES+1))
+  good_count=$(count=$(echo "$curl_response" | grep -o 'Good' | wc -l); echo "${count:-0}")
+  bad_failure_count=$(count=$(echo "$curl_response" | grep -o 'Bad_Failure' | wc -l); echo "${count:-0}")
 
-    elif [ -f "$FILE_PATH" ] && [[ "$FILE_PATH" =~ \.json$ ]]; then
-        post_tags "$FILE_PATH"
-    else
-        echo "Error: Invalid file or directory path: $FILE_PATH"
-        exit 1
-    fi
+  echo "  Tag import for $directory_path: Good ($good_count) Bad_Failure ($bad_failure_count)"
+  if [ "$DEBUG" = true ]; then echo "  Response: $curl_response"; fi
 }
 
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        --provider)
-            shift
-            PROVIDER="$1"
-            ;;
-        --policy)
-            shift
-            POLICY="$1"
-            ;;
-        --file | -f)
-            shift
-            FILE_PATH="$1"
-            ;;
-        --force)
-            FORCE_FLAG=true
-            ;;
-        --host)
-            shift
-            HOST="$1"
-            ;;
-        --help | -h)
-            display_help
-            ;;
-        *)
-            break
-            ;;
-    esac
-    shift
+auto_import_tags() {
+  local gateway_base_url="$1"
+  local directory_path="$2"
+  local provider
+
+  for provider_dir in "$directory_path"/*; do
+    if [ -d "$provider_dir" ]; then
+      provider=$(basename -- "$provider_dir")
+      import_tags "$gateway_base_url" "$provider" "$(adjust_file_path "$provider_dir")"
+      for tag_json in "$provider_dir"/*.json; do
+        if [ -f "$tag_json" ]; then
+          base_url=$(construct_root_dir_url "$gateway_base_url" "$PROVIDER")
+          echo "$base_url"
+          curl_response=$(curl -X POST -H "Content-Type: application/json" -d @"$tag_json" "$base_url")
+          RESTORED_FILES=$((RESTORED_FILES+1))
+          echo "  Tag import for $tag_json: $curl_response"
+        fi
+      done
+    fi
+  done
+
+}
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    -p|--provider)
+      PROVIDER="$2"
+      shift
+      shift
+      ;;
+    -c|--policy)
+      POLICY="$2"
+      shift
+      shift
+      ;;
+    -d|--directory)
+      DIRECTORY_PATH="$2"
+      shift
+      shift
+      ;;
+    -a|--auto)
+      AUTO_PROVIDER=true
+      shift
+      ;;
+    --force)
+      FORCE=true
+      shift
+      ;;
+    --debug)
+      DEBUG=true
+      shift
+      ;;
+    -h|--help)
+      display_help
+      ;;
+    *)
+      GATEWAY_BASE_URL="$1"
+      shift
+      ;;
+  esac
 done
 
+# Check if gateway base URL is provided
+if [ -z "$GATEWAY_BASE_URL" ]; then
+  echo "Error: Gateway base URL is required."
+  display_help
+fi
+
 main() {
-    echo "Running tag import with the following parameters:"
-    echo "File Path: $FILE_PATH"
-    echo "Host: $HOST"
-    echo "Provider: ${PROVIDER:-default (Default)}"
-    echo "Policy: ${POLICY:-o (Default)}"
+  parse_arguments
 
-    if [ "$POLICY" == "o" ] || [ "$POLICY" == "d" ]; then
-        if [ "$FORCE_FLAG" == false ]; then
-            confirm_overwrite || exit 0
-        fi
-    fi
-    if [ -f /.dockerenv ]; then
-        LOG_FILE="/$LOG_FILE"
-    fi
-    check_arguments
-    import_tags
+  echo "Running tag import with the following parameters:"
+  echo "  Gateway Base URL: $GATEWAY_BASE_URL"
+  echo "  Directory Path: $DIRECTORY_PATH"
+  if [ "$AUTO_PROVIDER" = false ]; then echo "  Provider: ${PROVIDER:-default (Default)}"; fi
+  echo "  Policy: ${POLICY:-o (Default)}"
+  echo -e "  Auto: ${AUTO_PROVIDER}\n"
 
-    # Display status report
-    echo -e "\nRestored $RESTORED_FILES file(s)."
+  if [ "$AUTO_PROVIDER" = true ]; then
+    auto_import_tags "$GATEWAY_BASE_URL" "$DIRECTORY_PATH"
+  else
+    adjust_file_path "$DIRECTORY_PATH"
+    import_tags "$GATEWAY_BASE_URL" "$PROVIDER" "$DIRECTORY_PATH"
+  fi
+
+  echo -e "\nRestored $RESTORED_FILES directory(s)."
 }
 
 main

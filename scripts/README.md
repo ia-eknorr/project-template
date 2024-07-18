@@ -1,0 +1,79 @@
+# `scripts` Directory
+
+## Table of Contents
+
+- [`scripts` Directory](#scripts-directory)
+  - [Table of Contents](#table-of-contents)
+  - [Contents and Usage](#contents-and-usage)
+    - [`download-gateway-backups.sh`](#download-gateway-backupssh)
+    - [`scripts/export-all-tags.sh`](#scriptsexport-all-tagssh)
+    - [`scripts/import-all-tags.sh`](#scriptsimport-all-tagssh)
+    - [`scripts/tag-export.sh`](#scriptstag-exportsh)
+    - [`scripts/tag-import.sh`](#scriptstag-importsh)
+
+## Contents and Usage
+
+### `download-gateway-backups.sh`
+
+This script is the primary way that gateway backups are taken in this stack. The script runs `docker compose ps` to search for ignition services, runs a `docker exec` against each running ignition gateway in the compose stack, and takes a gateway backup. Then, it unzips the gwbk, deletes the `projects` directory, re-zips the backup, and moves the backup into the `gw-init` directory. This is all an automatic process - to use this script, run the following:
+
+```bash
+scripts/download-gateway-backups.sh
+```
+
+Then, simply commit the gateway backups found in `gw-init` that you wish to keep.
+
+### `scripts/export-all-tags.sh`
+
+This is a helper script that can be used to export tags from the gateway. Simply run the script and it will export all tags from the gateway into a structure of files and directories that mimic the tag structure in the project.
+
+1. After tag changes have been made, run:
+
+    ```bash
+    bash scripts/export-all-tags.sh
+    ```
+
+    A structure of files and directories will be created that mimics the tag structure in the project.
+
+    > Example:
+    >
+    > ```bash
+    > .
+    > └── tags
+    >     ├── default
+    >     │   ├── _types_
+    >     │   │   └── myUdt.json
+    >     │   └── Exchange
+    >     │       └── myInstance.json
+    >     └── my_provider
+    >         ├── _types_
+    >         │   └── anotherUdt.json
+    >         └── Exchange
+    >             └── anotherInstance.json     
+    > ```
+
+### `scripts/import-all-tags.sh`
+
+This is a helper script that can be used to import tags into the gateway. This script is only for use in this development environment. It will import all tags from the tags directory into the gateway.
+
+1. After receiving new tags in the `tags/` directory (perhaps after using `git fetch`), run:
+
+    ```bash
+    bash scripts/import-all-tags.sh
+    ```
+
+### `scripts/tag-export.sh`
+
+The [export-all-tags.sh](#scriptsexport-all-tagssh) is built on this tag-export utility. This tag export script can be used for more advanced or specific use cases. For more information, see the script help.
+
+```bash
+scripts/tag-export.sh --help
+```
+
+### `scripts/tag-import.sh`
+
+The [import-all-tags.sh](#scriptsimport-all-tagssh) is built on this tag import utility. It can be used for more advanced or specific use cases. For more information, see the script help.
+
+```bash
+scripts/tag-import.sh --help
+```

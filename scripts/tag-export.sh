@@ -1,68 +1,103 @@
 #!/bin/bash
+set -eo pipefail
 
-FOLDERS_TO_CHECK=("_types_" "Exchange")
+#####################
+# Tag Export Script #
+# Version: 4.1      #
+# Date: 2024-04-05  #
+#####################
 
-get_absolute_path() {
-  local script_path="$1"
-  dirname "$(realpath "$script_path")"
+# Default values
+DEFAULT_PROVIDER="default"
+DEFAULT_BASE_TAG_PATH=""
+DEFAULT_RECURSIVE="true"
+
+# Initialize variables
+PROVIDER="$DEFAULT_PROVIDER"
+BASE_TAG_PATH="$DEFAULT_BASE_TAG_PATH"
+RECURSIVE="$DEFAULT_RECURSIVE"
+
+# Function to display script usage
+display_help() {
+  echo "Usage: $0 [options] <gateway_base_url>"
+  echo "Options:"
+  echo "  -p, --provider <provider>     Set the provider (default: $DEFAULT_PROVIDER)"
+  echo "  -t, --base-tag-path <path>    Set the base tag path (default: $DEFAULT_BASE_TAG_PATH)"
+  echo "  -r, --recursive <true|false>  Set recursive export (default: $DEFAULT_RECURSIVE)"
+  echo "  -d, --delete-existing         Delete existing tags before exporting"
+  echo "  -h, --help                    Display this help message"
+  exit 0
 }
 
-parse_environment() {
-  local env_file="$1"
-  ENV_FILE="${env_file:-$(realpath "$env_file")}"
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+    -p|--provider)
+      PROVIDER="$2"
+      shift
+      shift
+      ;;
+    -t|--base-tag-path)
+      BASE_TAG_PATH="$2"
+      shift
+      shift
+      ;;
+    -r|--recursive)
+      RECURSIVE="$2"
+      shift
+      shift
+      ;;
+    -d|--delete-existing)
+	    DELETE_EXISTING="true"
+	    shift
+	    ;;
+    -h|--help)
+      display_help
+      ;;
+    *)
+      GATEWAY_BASE_URL="$1"
+      shift
+      ;;
+  esac
+done
 
-  while IFS='=' read -r key value; do
-    case "$key" in
-      GATEWAY_NAME|ENV)
-        eval "$key=\"${value//\"/}\""
-        ;;
-    esac
-  done < "$ENV_FILE"
-
-  if [ -z "$GATEWAY_NAME" ] || [ -z "$ENV" ]; then
-    echo "Error: Missing required variables. Please check your .env file."
-    exit 1
-  fi
-}
+# Check if gateway base URL is provided
+if [ -z "$GATEWAY_BASE_URL" ]; then
+  echo "Error: Gateway base URL is required."
+  display_help
+fi
 
 construct_url() {
-  local gateway_name="$1"
-  local env="$2"
+  local gateway_base_url="$1"
+  local provider="$2"
   local base_path="$3"
-  echo "http://${gateway_name}-${env}.localtest.me/data/tag-cicd/tags/export?recursive=true&baseTagPath=$base_path&individualFilesPerObject=true"
+  local recursive="$4"
+  echo "${gateway_base_url}/data/tag-cicd/tags/export?provider=${provider}&recursive=${recursive}&baseTagPath=${base_path}&individualFilesPerObject=true&localPropsOnly=true&filePath=/tags/${provider}&deleteExisting=${DELETE_EXISTING}"
 }
 
 process_url() {
-  local url_name="$1"
-  local base_path="$2"
-  local output_file="tags/${base_path}.json"
+  local gateway_base_url="$1"
+  local provider="$2"
+  local base_path="$3"
+  local recursive="$4"
 
-  URL=$(construct_url "$GATEWAY_NAME" "$ENV" "$base_path")
-  echo "Constructed URL for $url_name: $URL"
+  URL=$(construct_url "$gateway_base_url" "$provider" "$base_path" "$recursive")
+  echo "Constructed URL for $base_path: $URL"
 
-  curl "$URL" -o "$output_file"
-}
-
-format_json() {
-  local json_file="$1"
-  if command -v python3 &> /dev/null; then
-    python3 -c "import json; data = json.load(open('$json_file')); formatted_data = json.dumps(data, indent=2); open('$json_file', 'w').write(formatted_data)"
-    echo "Formatted JSON saved to $json_file"
-  else
-    echo "Error: Python 3 is required for JSON formatting, but it is not installed."
-  fi
+  curl -X POST "$URL"
 }
 
 main() {
-  echo "Beginning tag export"
+  # echo to user that they are beginning tag export and show date
+  echo -e "\n\n------- $(date) -------"
+  echo "Tag Export"
+  echo "Gateway Base URL: $GATEWAY_BASE_URL"
+  echo "Provider: $PROVIDER"
+  echo "Base Tag Path: $BASE_TAG_PATH"
+  echo "Recursive: $RECURSIVE"
 
-  ENV_FILE=$(get_absolute_path "$0")/../.env
-  parse_environment "$ENV_FILE"
-
-  for folder in "${FOLDERS_TO_CHECK[@]}"; do
-    process_url "$folder" "$folder"
-    format_json "tags/${folder}.json"
-  done
+  process_url "$GATEWAY_BASE_URL" "$PROVIDER" "$BASE_TAG_PATH" "$RECURSIVE"
 }
 
 main
