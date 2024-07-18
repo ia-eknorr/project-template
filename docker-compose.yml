@@ -1,6 +1,4 @@
 ---
-version: "3.8"
-
 x-ignition-common: &ignition-common
   image: inductiveautomation/ignition:8.1.42
   user: 0:0
@@ -16,6 +14,7 @@ services:
       - ignition-data:/usr/local/bin/ignition/data
       - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
       - ./module-init/Tag-CICD.modl:/usr/local/bin/ignition/user-lib/modules/Tag-CICD.modl
+      - ./tags:/tags
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
@@ -44,7 +43,7 @@ services:
       - TZ=America/Los_Angeles
     entrypoint: []
     command: >
-      tag-import.sh -f /tags --host ${GATEWAY_NAME} --policy d --force
+      tag-import.sh -c d -d /tags -a --force --debug gateway:8088
     volumes:
       - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
       - ./tags:/tags
