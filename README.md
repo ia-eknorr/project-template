@@ -61,10 +61,6 @@ It is assumed that the following have been installed and set up before spinning 
    * Used for any necessary 3rd party modules.
    * See `module-init/readme.md` to learn more about how to use this folder.
 
-7. `secrets` (Optional)
-   * Used for sensitive information like passwords, tokens, etc.
-   * See `secrets/readme.md` to learn more about how to use this folder.
-
 ### Finish stack setup
 
 1. Commit and push stack changes
