@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Global Variables
-PROJECT_NAME="example-gateway"
+PROJECT_NAME="gateway"
 POSTGRES_USER="ignition"
 POSTGRES_PASSWORD="ignition"
 POSTGRES_DB="ExampleDb"
@@ -66,7 +66,7 @@ while true; do
         break
     else
         printf '\n Traefik Proxy dashboard not accessible. \n'
-        install_path="${HOME}"/traefik-proxy/
+        install_path="${HOME}"/workspace/utilities/traefik-proxy/
         echo -n ' Default location is: '"${install_path}"
         read -rep $' Would you like to use this default path (y/n)?' use_default
 
