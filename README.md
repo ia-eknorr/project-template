@@ -32,20 +32,14 @@ It is assumed that the following have been installed and set up before spinning 
 > [!NOTE]
 > This will be different for each project. Below are suggested changes, but not everything may be applicable.
 
-1. `.env`
-   Update, add, or delete these variables as needed. The ones currently in this file are added as examples.
+1. `initialize.sh`
+   Update, add, or delete environment variables that are created when running `initialize.sh`. This is used to create the `.env` file, among other things.
 
 2. `db-init`
    Place .sql files containing database instantiation in the following folders. These sql scripts will be be run alphanumerically on startup.
 
-3. `gw-projects`
-   * For a new project
-      * Update `ExampleProject/project.json` with `title: "<NewProjectName>"`
-      * Rename `ExampleProject` directory with `<NewProjectName>`
-   * For an existing project
-      * Delete `gw-projects/ExampleProject` and replace it with the existing _unzipped_ project export.
+3. `readme.md`
 
-4. `readme.md`
    > [!TIP]
    > Your project should have a readme that contains information about the project, helpful links, and anything else you think would be useful. `sample-readme.md` has been added as an example.
 
@@ -53,35 +47,49 @@ It is assumed that the following have been installed and set up before spinning 
    * Delete (or rename) this document, `readme.md`.
    * Rename `sample-readme.md` to `readme.md`.
 
-5. `docs` (Optional)
+4. `docs` (Optional)
    * Place any useful or pertinent documentation to your project here, such as an `installation-guide.md`
 
-6. `module-init` (Optional)
+5. `module-init` (Optional)
 
    * Used for any necessary 3rd party modules.
-   * See `module-init/readme.md` to learn more about how to use this folder.
+   * See [`module-init/readme.md`](/module-init/readme.md) to learn more about how to use this folder.
 
-7. `secrets` (Optional)
+6. `secrets` (Optional)
    * Used for sensitive information like passwords, tokens, etc.
-   * See `secrets/readme.md` to learn more about how to use this folder.
+   * See [`secrets/readme.md`](/secrets/readme.md) to learn more about how to use this folder.
+
+### Note for Windows/Linux Users
+
+In order for the symlinks to work, you must first create an empty folder adjacent to the `docker-compose.yml` file that has the same name as the desired bind mount. On Windows/Linux docker will automatically do everything as `root`, so without doing this the created file will be owned by `root:root` instead of `user:user`. On a Mac, this is not necessary, MacOS ftw.
+
+So for example, if you have a bind mount for `./data-gateway:/workdir`, you would need to create a folder named `data-gateway` in the same directory as the `docker-compose.yml` file.
 
 ### Finish stack setup
 
 1. Commit and push stack changes
 
    ```bash
-   cd /path/to/project
    git add .
-   git commit -m "Feature: Update base stack for <ProjectName> project"
+   git commit -m "Initial commit"
    git push origin main
    ```
 
-2. Spin up the stack
+2. Initialize the stack
 
    ```bash
-   cd /path/to/project
+   bash initialize.sh
+   ```
+
+3. Spin up the stack
+
+   ```bash
    docker-compose up -d
    ```
+
+4. Start development!
+   * Make gateway changes
+   * Create projects
 
 ## Updating this Development Environment
 
