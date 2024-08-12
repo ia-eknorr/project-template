@@ -1,4 +1,5 @@
 ---
+# Common ignition gateway settings
 x-ignition-common: &ignition-common
   image: etknorr/common-docker-ignition:8.1.42
   networks:
@@ -9,9 +10,13 @@ services:
     <<: *ignition-common
     container_name: ${GATEWAY_NAME}
     volumes:
+      # Bind mount the data-gateway directory to the container's workdir
+      - ./data-gateway:/workdir
+      # Gwbk file to restore from
       - ./gw-init/gateway.gwbk:/restore.gwbk
-      - ./gateway-data:/workdir
+      # Modules to be installed
       - ./module-init/Tag-CICD.modl:/modules
+      # Tags to be imported
       - ./tags:/tags
     labels:
       - traefik.enable=true
