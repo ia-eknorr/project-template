@@ -1,7 +1,7 @@
 ---
+# Common ignition gateway settings
 x-ignition-common: &ignition-common
-  image: inductiveautomation/ignition:8.1.42
-  user: 0:0
+  image: etknorr/common-docker-ignition:8.1.42
   networks:
     - default
 
@@ -10,20 +10,19 @@ services:
     <<: *ignition-common
     container_name: ${GATEWAY_NAME}
     volumes:
+      # Bind mount the data-gateway directory to the container's workdir
+      - ./data-gateway:/workdir
+      # Gwbk file to restore from
       - ./gw-init/gateway.gwbk:/restore.gwbk
-      - ignition-data:/usr/local/bin/ignition/data
-      - ./gw-projects/${IGNITION_PROJECT}:/usr/local/bin/ignition/data/projects/${IGNITION_PROJECT}
-      - ./module-init/Tag-CICD.modl:/usr/local/bin/ignition/user-lib/modules/Tag-CICD.modl
+      # Modules to be installed
+      - ./module-init/Tag-CICD.modl:/modules
+      # Tags to be imported
       - ./tags:/tags
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
     environment:
-      - ACCEPT_IGNITION_EULA=Y
-      - IGNITION_EDITION=standard
-      - DISABLE_QUICKSTART=true
-      - TZ=America/Los_Angeles
-      - GATEWAY_MODULES_ENABLED=perspective,tag-historian,web-developer,opc-ua,sql-bridge,alarm-notification
+      TZ: America/Los_Angeles
     command: >
       -n ${GATEWAY_NAME}
       -h 80
@@ -31,7 +30,6 @@ services:
       -a ${GATEWAY_NAME}.localtest.me
       -r /restore.gwbk
       --
-      -Dignition.projects.scanFrequency=10
       -Dignition.allowunsignedmodules=true
 
   tag-import:
@@ -40,7 +38,7 @@ services:
       gateway:
         condition: service_healthy
     environment:
-      - TZ=America/Los_Angeles
+      TZ: America/Los_Angeles
     entrypoint: []
     command: >
       tag-import.sh -c d -d /tags -a --force --debug gateway:8088
@@ -53,7 +51,6 @@ services:
     hostname: db-${GATEWAY_NAME}
     container_name: db-${GATEWAY_NAME}
     volumes:
-      - db-data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -75,7 +72,3 @@ networks:
   default:
     external: true
     name: proxy
-
-volumes:
-  ignition-data:
-  db-data:

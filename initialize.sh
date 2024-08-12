@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Global Variables
-PROJECT_NAME="example-gateway"
-IGNITION_PROJECT="ExampleProject"
+PROJECT_NAME="gateway"
 POSTGRES_USER="ignition"
 POSTGRES_PASSWORD="ignition"
 POSTGRES_DB="ExampleDb"
@@ -67,7 +66,7 @@ while true; do
         break
     else
         printf '\n Traefik Proxy dashboard not accessible. \n'
-        install_path="${HOME}"/traefik-proxy/
+        install_path="${HOME}"/workspace/utilities/traefik-proxy/
         echo -n ' Default location is: '"${install_path}"
         read -rep $' Would you like to use this default path (y/n)?' use_default
 
@@ -108,13 +107,12 @@ done
 
 # Update local files with project name
 printf '\n Creating .env file for the %s project... \n' "${PROJECT_NAME}"
-if [[ "${PROJECT_NAME}" =~ [\<\>] || "${IGNITION_PROJECT}" =~ [\<\>] || "${DATABASE_NAME}" =~ [\<\>] ]]; then
+if [[ "${PROJECT_NAME}" =~ [\<\>] || "${DATABASE_NAME}" =~ [\<\>] ]]; then
     printf '\n Error: initialize.sh was not set up properly. Please consult the repository owner and the template README.md to properly configure before proceeding.\n'
     exit 1
 fi
 cat << EOF > ./.env
 GATEWAY_NAME="${PROJECT_NAME}"
-IGNITION_PROJECT="${IGNITION_PROJECT}"
 POSTGRES_USER="${POSTGRES_USER}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
 POSTGRES_DB="${POSTGRES_DB}"
