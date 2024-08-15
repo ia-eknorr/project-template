@@ -15,7 +15,7 @@
 
 ### `download-gateway-backups.sh`
 
-This script is the primary way that gateway backups are taken in this stack. The script runs `docker compose ps` to search for ignition services, runs a `docker exec` against each running ignition gateway in the compose stack, and takes a gateway backup. Then, it unzips the gwbk, deletes the `projects` directory, re-zips the backup, and moves the backup into the `gw-init` directory. This is all an automatic process - to use this script, run the following:
+This script is the primary way that gateway backups are taken in this stack. The script runs `docker compose ps` to search for ignition services, runs a `docker exec` against each running Ignition Gateway in the compose stack, and takes a gateway backup. Then, it unzips the gwbk, deletes the `projects` directory, re-zips the backup, and moves the backup into the `gw-init` directory. This is all an automatic process - to use this script, run the following:
 
 ```bash
 scripts/download-gateway-backups.sh

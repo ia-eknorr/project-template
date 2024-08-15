@@ -55,10 +55,6 @@ It is assumed that the following have been installed and set up before spinning 
    * Used for any necessary 3rd party modules.
    * See [`module-init/readme.md`](/module-init/readme.md) to learn more about how to use this folder.
 
-6. `secrets` (Optional)
-   * Used for sensitive information like passwords, tokens, etc.
-   * See [`secrets/readme.md`](/secrets/readme.md) to learn more about how to use this folder.
-
 ### Note for Windows/Linux Users
 
 In order for the symlinks to work, you must first create an empty folder adjacent to the `docker-compose.yml` file that has the same name as the desired bind mount. On Windows/Linux docker will automatically do everything as `root`, so without doing this the created file will be owned by `root:root` instead of `user:user`. On a Mac, this is not necessary, MacOS ftw.
