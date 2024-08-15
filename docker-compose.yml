@@ -15,7 +15,7 @@ services:
       # Gwbk file to restore from
       - ./gw-init/gateway.gwbk:/restore.gwbk
       # Modules to be installed
-      - ./module-init/Tag-CICD.modl:/modules
+      - ./module-init/Tag-CICD.modl:/modules/Tag-CICD.modl
       # Tags to be imported
       - ./tags:/tags
     labels:
