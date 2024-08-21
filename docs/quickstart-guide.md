@@ -1,26 +1,12 @@
-# Setup Guide
-
-## Table of Contents
-
-- [Setup Guide](#setup-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Initial setup](#initial-setup)
-  - [Spinning up the stack](#spinning-up-the-stack)
-  - [Stopping the stack](#stopping-the-stack)
-  - [About volumes](#about-volumes)
-  - [Common Docker Stack Operations](#common-docker-stack-operations)
-    - [Viewing logs](#viewing-logs)
-  - [Contributing](#contributing)
-  - [Testing](#testing)
+# Contributing Guide
 
 ## Introduction
 
-This guide is meant to help you understand what's here and how to use it, starting from the ground up. At the end of this guide, you should have a working development stack that you can use to develop, build, test, and deploy the Demo POC application.
-
-This stack is built using several tools and technologies, including Docker, Docker Compose, Git version control, and WSL (for Windows users). If you are not familiar with these tools, please review the [Ignition version control](https://github.com/ia-eknorr/ignition-version-control) documentation to get a better understanding of how they work and how they are used with Ignition.
+The purpose of this document is to provide guidelines for contributing to the project. This includes setting up the development environment, making changes, and submitting pull requests. If this is a new project, follow the [Setup Guide](./docs/setup-guide.md) to get started.
 
 ## Initial setup
+
+If you have previously used the standard SE project template, this should be done already. If not, follow these steps to set up your development environment.
 
 1. [Verify your workstation is set up properly](https://github.com/ia-eknorr/ignition-version-control/blob/main/Workstation%20Setup.md)
 2. If you are a Windows user, you will need to install WSL2 and Docker on WSL. Follow the instructions in the [Windows Setup Guide](https://github.com/ia-eknorr/ignition-version-control/blob/main/Set%20Up%20WSL.md)
@@ -32,6 +18,11 @@ This stack is built using several tools and technologies, including Docker, Dock
     cd <path-to-your-workspace>
     git clone <github-repository-link>
     ```
+
+> [!WARNING] Additional setup for Windows/Linux users
+> Check the [docker-compose.yml](../docker-compose.yml) file for any bind mounts to `/workdir`. In order for the symlinks to work, you must first create an empty folder adjacent to the `docker-compose.yml` file that has the same name as the desired bind mount. On Windows/Linux docker will automatically do everything as `root`, so without doing this the created file will be owned by `root:root` instead of `user:user`. On a Mac, this is not necessary, MacOS ftw.
+>
+> So for example, if you have a bind mount on an Ignition service for `./data-gateway:/workdir`, you would need to create a folder named `data-gateway` in the same directory as the `docker-compose.yml` file.
 
 ## Spinning up the stack
 
@@ -47,7 +38,7 @@ This stack is built using several tools and technologies, including Docker, Dock
     bash ./initialize.sh
     ```
 
-3. [Optional] During initialization, if you opted to not startup the stack, if you applied the license and token, or if you ran into an issue, you can start the stack by running the following command:
+3. [Optional] During initialization, if you opted to not startup the stack, or if you ran into an issue, you can start the stack by running the following command:
 
     ```bash
     docker compose up -d
@@ -59,60 +50,82 @@ This stack is built using several tools and technologies, including Docker, Dock
 4. Browse to the following URLs to access the application:
 
     `<service-name>.localtest.me`
+    
+## Pre-commit hooks
 
-## Stopping the stack
+This project uses pre-commit hooks to ensure that code is formatted correctly before committing. While not required, it can be helpful to install the pre-commit hooks to ensure that your code is formatted correctly before pushing changes.
 
-1. Open a terminal and navigate to the root of the repository.
+- To install the pre-commit hooks, run the following command:
 
     ```bash
-    cd <path-to-your-workspace>/<project-name>
+    pre-commit install
     ```
 
-2. Run one of following command to stop the stack:
-    - To stop the stack without removing the volumes:
+- To run the pre-commit hooks manually, run the following command:
 
-        ```bash
-        docker compose down
-        ```
+    ```bash
+    pre-commit run --all-files
+    ```
 
-    - To stop the stack and remove the volumes:
+- To uninstall the pre-commit hooks, run the following command:
 
-        ```bash
-        docker compose down -v
-        ```
+    ```bash
+    pre-commit uninstall
+    ```
 
-    > [!TIP]
-    > If you are having issues with the stack, you can try running the command with the `--remove-orphans` flag to remove any orphaned containers.
+- To skip the pre-commit hooks, add the `--no-verify` flag to the `git commit` command.
 
-## About volumes
+    ```bash
+    git commit -m "Your commit message" --no-verify
+    ```
 
-> [!TIP] TL;DR
-> It is almost always recommended to use the `-v` flag to remove volumes when taking down the stack. If you want to keep the gateway configs, you can run `docker compose down` without the `-v` flag.
+## Making changes
 
-This stack can be configured to use volumes to persist data between container restarts. When you run `docker compose down -v`, the volumes are removed. This is useful when you want to start fresh with a clean slate. If you want to keep the data, you can run `docker compose down` without the `-v` flag.
+> [!NOTE]
+> Before making changes, review the [Git Style Guide](https://github.com/ia-eknorr/ignition-git-style-guide) to ensure your branches, commits, and pull requests follow the established conventions.
+>
+> If you need a reminder on some of the Git commands, refer to the [Ignition Version Control](https://github.com/ia-eknorr/ignition-version-control) guide.
 
-When spinning up the stack, Ignition stores its data in a volume that will persist if the container is removed. This is useful for development purposes, such that if you need to restart your stack, you won't lose your data. For instance, if a gateway has been commissioned, or if a gateway backup has been restored, the data will persist between restarts. If you receive a new gateway backup that you want to have restored, the stack and volume will need to be removed. On startup, the new gateway backup will be restored to the gateway. 
+1. Create a new branch from the `main` branch.
 
-For more information about volumes, see the [Docker documentation](https://docs.docker.com/storage/volumes/).
+    ```bash
+    git checkout -b <branch-name>
+    ```
+
+2. Make changes to the codebase
+   - **Project changes**: These will be reflected in the `projects` directory within the Ignition service data directory and can be committed directly.
+   - **Gateway setting updates**: Use the [gateway backup script](../scripts/README.md#download-gateway-backupssh) to download the gateway backup and strip out the projects.
+   - **Tag changes**: Use the [tag export script](../scripts/README.md#scriptsexport-all-tagssh) to export all tags from the gateway into the `tags` directory.
+
+3. Commit changes
+
+    ```bash
+    git add .
+    git commit -m "Your commit message"
+    ```
+
+4. Push changes to the remote repository
+
+    ```bash
+    git push origin HEAD
+    ```
+
+## Submitting a pull request
+
+1. Open a pull request on GitHub
+2. Fill out the pull request template
+3. Assign a reviewer
+4. Wait for the reviewer to approve the pull request
+5. Merge the pull request
 
 ## Common Docker Stack Operations
 
-### Viewing logs
+### Basic Stack Commands
 
-- View logs for a specific service:
-
-    ```bash
-    docker compose logs <service-name>
-    ```
-
-  - Service names are defined in the [`docker-compose.yml`](../docker-compose.yml) file under `services`:
-    - `backend`
-    - `frontend`
-    - `db`
-- Take down the stack and remove the volumes:
+- Bring up the stack:
 
     ```bash
-    docker compose down -v
+    docker compose up -d
     ```
 
 - Take down the stack without removing the volumes:
@@ -121,28 +134,37 @@ For more information about volumes, see the [Docker documentation](https://docs.
     docker compose down
     ```
 
-- Take down the stack and remove the volumes, and remove any orphaned containers:
+- Take down the stack and remove any orphaned containers:
 
     ```bash
-    docker compose down -v --remove-orphans
+    docker compose down --remove-orphans
     ```
 
-- Take down the stack and remove the volumes, and remove any orphaned containers, and remove any images:
+### Log and Shell Commands
+
+> [!TIP]
+> Service names are defined in the [`docker-compose.yml`](../docker-compose.yml) file under `services`:
+> 
+> - `gateway`
+> - `db`
+
+- View logs for a specific service:
 
     ```bash
-    docker compose down -v --remove-orphans --rmi all
+    docker compose logs <service-name>
     ```
 
-- Bring up the stack:
+- Shell into a running container:
 
     ```bash
-    docker compose up -d
+    docker compose exec -it <service-name> /bin/bash
     ```
 
-## Contributing
+### FAQ
 
-Contribution guide coming soon...
+**How can I connect to a database management software like PGAdmin?**
 
-## Testing
-
-Local testing guide coming soon...
+- In `docker-compose.yml`, uncomment `services.db.ports` and the definition of ports on the next line.
+- Adjust the port to desired port map
+- Run `docker-compose up -d` to update the stack.
+- Connect to the database using the hostname of the database service and the port you defined.

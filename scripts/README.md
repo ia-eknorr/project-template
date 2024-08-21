@@ -21,6 +21,20 @@ This script is the primary way that gateway backups are taken in this stack. The
 scripts/download-gateway-backups.sh
 ```
 
+> [!WARNING] Alternate command for Windows users:
+> 
+> - On Windows Powershell:
+>
+>   ```bash
+>   docker run --rm -u root -v ${PWD}\gw-init:/gw-init -it --entrypoint bash inductiveautomation/ignition:8.1.42 -c "cd /gw-init; ./strip-projects-from-gwbk.sh -a"
+>    ```
+>
+> - On Windows CMD:
+>
+>   ```bash
+>   docker run --rm -u root -v %cd%\gw-init:/gw-init -it --entrypoint bash inductiveautomation/ignition:8.1.42 -c "cd /gw-init; ./strip-projects-from-gwbk.sh -a"
+>   ```
+
 Then, simply commit the gateway backups found in `gw-init` that you wish to keep.
 
 ### `scripts/export-all-tags.sh`
