@@ -2,7 +2,7 @@
 version: "3.8"
 
 x-ignition-common: &ignition-common
-  image: inductiveautomation/ignition:8.1.38
+  image: inductiveautomation/ignition:8.1.43
   user: 0:0
   networks:
     - default
