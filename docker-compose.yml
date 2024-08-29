@@ -1,7 +1,7 @@
 ---
 # Common ignition gateway settings
 x-ignition-common: &ignition-common
-  image: etknorr/common-docker-ignition:8.1.42
+  image: etknorr/common-docker-ignition:8.1.43
   networks:
     - default
 
