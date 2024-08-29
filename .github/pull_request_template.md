@@ -3,8 +3,6 @@
 <!--Include a description of what has changed and include relevant motivation and context.
 If needed, make sure to list all dependencies that are required for this change.-->
 
-<!--Link issues or Asana tasks when available.-->
-
 ## 🛠 Changes
 
 <!--Please choose one or delete options that are not relevant-->
