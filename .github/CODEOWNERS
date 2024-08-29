@@ -1,0 +1,4 @@
+.*                      @inductive-automation/se-github-maintainers
+scripts/*               @inductive-automation/se-github-maintainers
+docker-compose.yml      @inductive-automation/se-github-maintainers
+initialize.sh           @inductive-automation/se-github-maintainers
