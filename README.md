@@ -9,6 +9,6 @@ This project template is designed as a base repository for any project. It inclu
 
 ## Quick links
 
-- [Setup Guide](docs/setup-guide.md): Instructions for setting up the project for the first time.
-- [Quickstart Guide](docs/quickstart-guide.md): Instructions for making changes to the project after initial setup.
+- [Setup Guide](https://github.com/inductive-automation/docs-common/blob/main/docs/setup-guide.md): Instructions for setting up the project for the first time.
+- [Quickstart Guide](https://github.com/inductive-automation/docs-common/blob/main/docs/quickstart-guide.md): Instructions for making changes to the project after initial setup.
 - Sub-directory READMEs: Additional information for how to use specific directories in the project can be found in the READMEs of those directories.
