@@ -24,7 +24,7 @@ take_backup() {
 
 # shellcheck disable=SC2207
 set_container_names() {
-	mapfile -t temp_containers < <(docker-compose ps -q | xargs docker inspect --format '{{ index .Config.Labels "com.docker.compose.service" }} {{ .Name }} {{ .Config.Image }}' | grep -E '/common-docker-ignition|/ignition' | sed 's/\///g' | awk '{print $1, $2}')
+	mapfile -t temp_containers < <(docker compose ps -q | xargs docker inspect --format '{{ index .Config.Labels "com.docker.compose.service" }} {{ .Name }} {{ .Config.Image }}' | grep -E '/common-docker-ignition|/ignition' | sed 's/\///g' | awk '{print $1, $2}')
 	CONTAINERS=($(printf '%s\n' "${temp_containers[@]}" | awk '{print $2, $1}')) 
 }
 

@@ -7,6 +7,7 @@ POSTGRES_PASSWORD="ignition"
 POSTGRES_DB="ExampleDb"
 
 pull_start_containers () {
+
     # Docker pull and start containers
     local MAX_WAIT_SECONDS=60
     local WAIT_INTERVAL=5
@@ -14,13 +15,23 @@ pull_start_containers () {
     local container_name="$2"
     local compose_file="$3"
 
+    # if  docker compose &>/dev/null && [ $? -eq 0 ]; then
+    #     echo "Found Compose V2. Initialization will proceed."
+    # elif [ -x "$(command -v docker-compose)" ]; then
+    #     echo "Error: Docker Compose V1 ('docker-compose') is not supported. Please migrate to Compose V2 (https://docs.docker.com/compose/migrate/) and try again."
+    #     exit 1
+    # else
+    #     echo "Error: Docker Compose ('docker compose') is required but was not found. Please install it and try again."
+    #     exit 1
+    # fi
+
     while true; do
 
         printf '\n\n Waiting for Docker container %s to start...\n' "${container_name}"
         if [[ ! "${container_name}" == "proxy" ]]; then
-            docker-compose pull && docker-compose up -d
+            docker compose pull && docker compose up -d
         else
-            docker-compose pull && docker-compose -f "${compose_file}" up -d
+            docker compose pull && docker compose -f "${compose_file}" up -d
         fi
 
         elapsed_seconds=0
@@ -101,7 +112,7 @@ while true; do
 
     printf ' Cloning ia-eknorr/traefik-reverse-proxy into %s...\n' "${install_path}"
     git clone https://github.com/ia-eknorr/traefik-reverse-proxy.git "${install_path}"
-    pull_start_containers "${PROJECT_NAME}" proxy "${install_path}"/docker-compose.yml
+    pull_start_containers "${PROJECT_NAME}" proxy "${install_path}"/docker compose.yml
     fi
 done
 
@@ -123,11 +134,10 @@ while true; do
     read -rep $'\n\n Do you want to pull any changes to the Docker image and start the Ignition Gateway container? (y/n) \n' start_container
     case "${start_container}" in
         [yY]* ) 
-            pull_start_containers "${PROJECT_NAME}" "${PROJECT_NAME}" ./docker-compose.yml;
+            pull_start_containers "${PROJECT_NAME}" "${PROJECT_NAME}" ./docker compose.yml;
             break;;
         [nN]* ) 
             printf '\n Please run: \n docker compose pull && docker compose up -d'
-            printf '\n If running an older version of docker compose, you may need to run: \n docker-compose pull && docker-compose up -d'
             printf '\n Once the container is started, in a web browser, access the gateway at http://%s.localtest.me' ${PROJECT_NAME}
             break;;
         * ) 
