@@ -10,7 +10,7 @@ on:
 jobs:
   shellcheck:
     name: Lint Shell Files
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Run ShellCheck
@@ -18,7 +18,7 @@ jobs:
 
   markdownlint:
     name: Lint Markdown
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js
@@ -33,7 +33,7 @@ jobs:
 
   yamllint:
     name: Lint YAML files
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Run yamllint
@@ -41,7 +41,7 @@ jobs:
 
   lint-ignition-views:
     name: Lint Ignition Views
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Run lint-ignition-views.py
