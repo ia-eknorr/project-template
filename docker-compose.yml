@@ -1,13 +1,16 @@
 ---
 # Common ignition gateway settings
 x-ignition-common: &ignition-common
-  image: etknorr/common-docker-ignition:8.1.43
+  depends_on:
+    db:
+      condition: service_healthy
   networks:
-    - default
+    default:
 
 services:
   gateway:
-    <<: *ignition-common
+    <<: [*ignition-common]
+    image: etknorr/common-docker-ignition:8.1.43
     container_name: ${GATEWAY_NAME}
     volumes:
       # Bind mount the data-gateway directory to the container's workdir
@@ -18,11 +21,21 @@ services:
       - ./module-init/Tag-CICD.modl:/modules/Tag-CICD.modl
       # Tags to be imported
       - ./tags:/tags
+      # Database connection properties
+      - ./db-connections:/init-db-connections
+      # Images
+      - ./idb-images:/idb-images
+      # Translations
+      - ./localization:/localization
     labels:
       - traefik.enable=true
       - traefik.hostname=${GATEWAY_NAME}
     environment:
-      TZ: America/Los_Angeles
+      TZ: ${TZ}
+      CONFIG_PERMISSIONS: ""
+      STATUS_PAGE_PERMISSIONS: ""
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     command: >
       -n ${GATEWAY_NAME}
       -h 80
@@ -33,7 +46,8 @@ services:
       -Dignition.allowunsignedmodules=true
 
   tag-import:
-    <<: *ignition-common
+    <<: [*ignition-common]
+    image: etknorr/common-docker-ignition:8.1.43
     depends_on:
       gateway:
         condition: service_healthy
@@ -53,6 +67,7 @@ services:
     volumes:
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
+      TZ: ${TZ}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -69,6 +84,5 @@ services:
         aliases:
           - db-${GATEWAY_NAME}
 networks:
-  default:
+  proxy:
     external: true
-    name: proxy
