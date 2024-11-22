@@ -4,7 +4,7 @@
 PROJECT_NAME="gateway"
 POSTGRES_USER="ignition"
 POSTGRES_PASSWORD="ignition"
-POSTGRES_DB="ExampleDb"
+TZ="America/Los_Angeles"
 
 pull_start_containers () {
 
@@ -14,16 +14,6 @@ pull_start_containers () {
     local project="$1"
     local container_name="$2"
     local compose_file="$3"
-
-    # if  docker compose &>/dev/null && [ $? -eq 0 ]; then
-    #     echo "Found Compose V2. Initialization will proceed."
-    # elif [ -x "$(command -v docker-compose)" ]; then
-    #     echo "Error: Docker Compose V1 ('docker-compose') is not supported. Please migrate to Compose V2 (https://docs.docker.com/compose/migrate/) and try again."
-    #     exit 1
-    # else
-    #     echo "Error: Docker Compose ('docker compose') is required but was not found. Please install it and try again."
-    #     exit 1
-    # fi
 
     while true; do
 
@@ -126,7 +116,7 @@ cat << EOF > ./.env
 GATEWAY_NAME="${PROJECT_NAME}"
 POSTGRES_USER="${POSTGRES_USER}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
-POSTGRES_DB="${POSTGRES_DB}"
+TZ="${TZ}"
 EOF
 
 # Setup and start Docker for Gateway
