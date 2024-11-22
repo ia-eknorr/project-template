@@ -1,4 +1,8 @@
-.*                      @inductive-automation/se-github-maintainers
-scripts/*               @inductive-automation/se-github-maintainers
-docker-compose.yml      @inductive-automation/se-github-maintainers
-initialize.sh           @inductive-automation/se-github-maintainers
+# Global owners
+#*                                       # uncomment this line and add a user or team to be the default owner for everything in the repo
+
+# Config files and dotfiles
+/.*                                     @inductive-automation/se-github-maintainers
+/scripts/*                              @inductive-automation/se-github-maintainers
+/docker-compose.yml                     @inductive-automation/se-github-maintainers
+/build/Dockerfile                       @inductive-automation/se-github-maintainers
