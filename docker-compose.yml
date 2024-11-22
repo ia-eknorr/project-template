@@ -10,7 +10,7 @@ x-ignition-common: &ignition-common
 services:
   gateway:
     <<: [*ignition-common]
-    image: etknorr/common-docker-ignition:8.1.43
+    image: etknorr/common-docker-ignition:8.1.44
     container_name: ${GATEWAY_NAME}
     volumes:
       # Bind mount the data-gateway directory to the container's workdir
@@ -47,7 +47,7 @@ services:
 
   tag-import:
     <<: [*ignition-common]
-    image: etknorr/common-docker-ignition:8.1.43
+    image: etknorr/common-docker-ignition:8.1.44
     depends_on:
       gateway:
         condition: service_healthy
