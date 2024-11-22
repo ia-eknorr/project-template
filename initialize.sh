@@ -4,7 +4,6 @@
 PROJECT_NAME="gateway"
 POSTGRES_USER="ignition"
 POSTGRES_PASSWORD="ignition"
-POSTGRES_DB="db"
 TZ="America/Los_Angeles"
 
 pull_start_containers () {
@@ -117,7 +116,6 @@ cat << EOF > ./.env
 GATEWAY_NAME="${PROJECT_NAME}"
 POSTGRES_USER="${POSTGRES_USER}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
-POSTGRES_DB="${POSTGRES_DB}"
 TZ="${TZ}"
 EOF
 
