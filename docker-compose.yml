@@ -68,7 +68,6 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
       TZ: ${TZ}
-      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
