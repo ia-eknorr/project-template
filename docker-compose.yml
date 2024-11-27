@@ -5,7 +5,7 @@ x-ignition-common: &ignition-common
     db:
       condition: service_healthy
   networks:
-    default:
+    proxy:
 
 services:
   gateway:
@@ -79,7 +79,7 @@ services:
     # ports:
     #   - "5430:5432"
     networks:
-      default:
+      proxy:
         aliases:
           - db-${GATEWAY_NAME}
 networks:
