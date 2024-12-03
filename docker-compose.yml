@@ -34,8 +34,8 @@ services:
       TZ: ${TZ}
       CONFIG_PERMISSIONS: ""
       STATUS_PAGE_PERMISSIONS: ""
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     command: >
       -n ${GATEWAY_NAME}
       -h 80
@@ -48,14 +48,15 @@ services:
   tag-import:
     <<: [*ignition-common]
     image: etknorr/common-docker-ignition:8.1.44
+    container_name: ${GATEWAY_NAME}-tag-import
     depends_on:
       gateway:
         condition: service_healthy
     environment:
-      TZ: America/Los_Angeles
+      TZ: ${TZ}
     entrypoint: []
     command: >
-      tag-import.sh -c d -d /tags -a --force --debug gateway:8088
+      tag-import.sh -c d -d /tags -a --force --debug ${GATEWAY_NAME}:8088
     volumes:
       - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
       - ./tags:/tags
@@ -68,8 +69,8 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     environment:
       TZ: ${TZ}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: ["CMD", "pg_isready", "-h", "localhost", "-U", "ignition"]
       interval: 10s

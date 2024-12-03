@@ -7,7 +7,6 @@
   - [Contents and Usage](#contents-and-usage)
     - [`download-gateway-backups.sh`](#download-gateway-backupssh)
     - [`scripts/export-all-tags.sh`](#scriptsexport-all-tagssh)
-    - [`scripts/import-all-tags.sh`](#scriptsimport-all-tagssh)
     - [`scripts/tag-export.sh`](#scriptstag-exportsh)
     - [`scripts/tag-import.sh`](#scriptstag-importsh)
 
@@ -21,7 +20,8 @@ This script is the primary way that gateway backups are taken in this stack. The
 scripts/download-gateway-backups.sh
 ```
 
-> [!WARNING] Alternate command for Windows users:
+> [!WARNING]
+> Alternate command for Windows users:
 > 
 > - On Windows Powershell:
 >
@@ -66,15 +66,6 @@ This is a helper script that can be used to export tags from the gateway. Simply
     >             └── anotherInstance.json     
     > ```
 
-### `scripts/import-all-tags.sh`
-
-This is a helper script that can be used to import tags into the gateway. This script is only for use in this development environment. It will import all tags from the tags directory into the gateway.
-
-1. After receiving new tags in the `tags/` directory (perhaps after using `git fetch`), run:
-
-    ```bash
-    bash scripts/import-all-tags.sh
-    ```
 
 ### `scripts/tag-export.sh`
 
@@ -86,7 +77,7 @@ scripts/tag-export.sh --help
 
 ### `scripts/tag-import.sh`
 
-The [import-all-tags.sh](#scriptsimport-all-tagssh) is built on this tag import utility. It can be used for more advanced or specific use cases. For more information, see the script help.
+This is a script that can be used to import all tags from the tags directory into the gateway in more advanced or specific cases.  For more information, see the script help.
 
 ```bash
 scripts/tag-import.sh --help

@@ -70,12 +70,6 @@ construct_url() {
   echo "${gateway_base_url}/data/tag-cicd/tags/import?provider=${provider}&baseTagPath=&collisionPolicy=${POLICY}&recursive=true&individualFilesPerObject=true&filePath=${directory_path}/"
 }
 
-construct_root_dir_url() {
-  local gateway_base_url="$1"
-  local provider="$2"
-  echo "${gateway_base_url}/data/tag-cicd/tags/import?provider=${provider}&baseTagPath=&collisionPolicy=o"
-}
-
 import_tags() {
   local gateway_base_url="$1"
   local provider="$2"
@@ -103,18 +97,8 @@ auto_import_tags() {
     if [ -d "$provider_dir" ]; then
       provider=$(basename -- "$provider_dir")
       import_tags "$gateway_base_url" "$provider" "$(adjust_file_path "$provider_dir")"
-      for tag_json in "$provider_dir"/*.json; do
-        if [ -f "$tag_json" ]; then
-          base_url=$(construct_root_dir_url "$gateway_base_url" "$PROVIDER")
-          echo "$base_url"
-          curl_response=$(curl -X POST -H "Content-Type: application/json" -d @"$tag_json" "$base_url")
-          RESTORED_FILES=$((RESTORED_FILES+1))
-          echo "  Tag import for $tag_json: $curl_response"
-        fi
-      done
     fi
   done
-
 }
 
 while [[ $# -gt 0 ]]; do

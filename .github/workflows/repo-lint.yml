@@ -1,19 +1,17 @@
 ---
-name: Common Linter
+name: Repo Lint
 
 on:
-  workflow_dispatch:
-  push:
   pull_request:
     branches: [main]
-    types: [closed]
 
 jobs:
   repo-lint:
     uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v0.4
     with:
-      ignition-views-lint: true
-      ignition-scripts-lint: false
       shellcheck: true
-      yamllint: true
       markdownlint: true
+      yamllint: true
+      ignition-scripts-lint: false
+      ignition-views-lint: true
+      ignition-views-lint-include: 'changed'

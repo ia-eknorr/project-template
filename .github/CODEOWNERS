@@ -5,4 +5,3 @@
 /.*                                     @inductive-automation/se-github-maintainers
 /scripts/*                              @inductive-automation/se-github-maintainers
 /docker-compose.yml                     @inductive-automation/se-github-maintainers
-/build/Dockerfile                       @inductive-automation/se-github-maintainers

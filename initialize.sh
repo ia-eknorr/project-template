@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# Global Variables
+# Global variables
 PROJECT_NAME="gateway"
-POSTGRES_USER="ignition"
-POSTGRES_PASSWORD="ignition"
 TZ="America/Los_Angeles"
+# Changing the following vars will result in breaking other parts of the stack
+DB_USER="ignition"
+DB_PASSWORD="ignition"
 
 pull_start_containers () {
 
     # Docker pull and start containers
     local MAX_WAIT_SECONDS=60
     local WAIT_INTERVAL=5
-    local project="$1"
     local container_name="$2"
     local compose_file="$3"
 
@@ -30,7 +30,6 @@ pull_start_containers () {
 
             if [[ $container_status == *"Up"* ]] && [[ ! "${container_name}" == "proxy" ]]; then
                 printf 'Container %s status: %s \n' "${container_name}" "${container_status}"
-                printf 'access the gateway at http://%s.localtest.me' "${project}"
                 break
             elif [[ $container_status == *"Up"* ]] && [[ "${container_name}" == "proxy" ]]; then
                 sleep $WAIT_INTERVAL
@@ -67,7 +66,7 @@ while true; do
         break
     else
         printf '\n Traefik Proxy dashboard not accessible. \n'
-        install_path="${HOME}"/workspace/utilities/traefik-proxy/
+        install_path="${HOME}"/traefik-proxy/
         echo -n ' Default location is: '"${install_path}"
         read -rep $' Would you like to use this default path (y/n)?' use_default
 
@@ -102,20 +101,17 @@ while true; do
 
     printf ' Cloning ia-eknorr/traefik-reverse-proxy into %s...\n' "${install_path}"
     git clone https://github.com/ia-eknorr/traefik-reverse-proxy.git "${install_path}"
-    pull_start_containers "${PROJECT_NAME}" proxy "${install_path}"/docker compose.yml
+    pull_start_containers "${PROJECT_NAME}" proxy "${install_path}"/docker-compose.yml
     fi
 done
 
 # Update local files with project name
-printf '\n Creating .env file for the %s project... \n' "${PROJECT_NAME}"
-if [[ "${PROJECT_NAME}" =~ [\<\>] || "${DATABASE_NAME}" =~ [\<\>] ]]; then
-    printf '\n Error: initialize.sh was not set up properly. Please consult the repository owner and the template README.md to properly configure before proceeding.\n'
-    exit 1
-fi
+printf ' Creating .env file for the %s project... \n' "${PROJECT_NAME}"
+
 cat << EOF > ./.env
+DB_USER="${DB_USER}"
+DB_PASSWORD="${DB_PASSWORD}"
 GATEWAY_NAME="${PROJECT_NAME}"
-POSTGRES_USER="${POSTGRES_USER}"
-POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
 TZ="${TZ}"
 EOF
 
@@ -124,16 +120,17 @@ while true; do
     read -rep $'\n\n Do you want to pull any changes to the Docker image and start the Ignition Gateway container? (y/n) \n' start_container
     case "${start_container}" in
         [yY]* ) 
-            pull_start_containers "${PROJECT_NAME}" "${PROJECT_NAME}" ./docker compose.yml;
+            pull_start_containers "${PROJECT_NAME}" "${PROJECT_NAME}" ./docker-compose.yml;
             break;;
         [nN]* ) 
-            printf '\n Please run: \n docker compose pull && docker compose up -d'
-            printf '\n Once the container is started, in a web browser, access the gateway at http://%s.localtest.me' ${PROJECT_NAME}
+            printf '\n Please run: \n\tdocker compose pull && docker compose up -d'
             break;;
         * ) 
             printf ' Please answer y or n.';;
     esac
 done
 
+printf '\n\n Once the container is started, in a web browser, access the gateways at:'
+printf '\n\t  http://%s.localtest.me' "${PROJECT_NAME}";
 printf '\n\n\n Ignition architecture initialization finished!'
 printf '\n ==================================================================== \n'

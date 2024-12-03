@@ -4,7 +4,7 @@ set -eo pipefail
 #####################
 # Tag Export Script #
 # Version: 4.1      #
-# Date: 2024-04-05  #
+# Date: 2024-04-22  #
 #####################
 
 # Default values
