@@ -2,28 +2,33 @@
 
 ## Usage
 
-Place language files into this directory to get imported into the frontend gateway's Translation Manager. By convention, the following folder and naming convention must be used to differentiate each vertical's language files:
+Use the following steps to add localization to the project vertical repository:
 
-```bash
-.
-└── localization
-    └── <vertical-name>_<language1>.XML
-    └── <vertical-name>_<language2>.XML
-    └── ...
-        
-```
+1. In the designer, add languages/text as normal using the Translation Manager. Once changes are complete, export each of the updated language files.
+
+2. Copy the updated language files into this `localization` directory, renaming each with the vertical name. By convention, the following structure must be used to differentiate each vertical's language files:
+
+    ```bash
+    .
+    └── localization
+        └── <vertical-name>_<language1>.XML
+        └── <vertical-name>_<language2>.XML
+        └── ...
+            
+    ```
 
 
-> Example
->
-> ```bash
-> .
-> └── localization
->     └── features-demo_en.XML
->     └── features-demo_it.XML
->     └── ...
->```
+    > Example
+    >
+    > ```bash
+    > .
+    > └── localization
+    >     └── features-demo_en.XML
+    >     └── features-demo_it.XML
+    >     └── ...
+    >```
 
-> [!NOTE]
-> Languages can be edited in these files or in the designer. However, when modified in the designer, they must be manually exported and copied into this directory for tracking and importing on next stack spin up.
->
+3. After all changes are complete, commit file changes to repository.
+
+> [!WARNING] 
+> If the new translations are only added to the Translation Manager dialog within the designer, the translations will get overwritten the next time the stack is spun up. It is very important to follow steps 1-3.
