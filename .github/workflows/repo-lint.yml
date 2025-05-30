@@ -1,17 +1,74 @@
 ---
 name: Repo Lint
-
 on:
+  workflow_dispatch:
+    inputs:
+      ignition-views-lint:
+        description: 'Run Ignition Views Lint'
+        required: false
+        type: boolean
+        default: false
+      ignition-scripts-lint:
+        description: 'Run Ignition Scripts Lint'
+        required: false
+        type: boolean
+        default: false
+      yamllint:
+        description: 'Run YAML Lint'
+        required: false
+        type: boolean
+        default: false
+      markdownlint:
+        description: 'Run Markdown Lint'
+        required: false
+        type: boolean
+        default: false
+      shellcheck:
+        description: 'Run Shellcheck'
+        required: false
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
-
 jobs:
+  set-vars:
+    name: Set Variables
+    runs-on: ubuntu-latest
+    outputs:
+      shellcheck: ${{ steps.set-vars.outputs.shellcheck }}
+      markdownlint: ${{ steps.set-vars.outputs.markdownlint }}
+      yamllint: ${{ steps.set-vars.outputs.yamllint }}
+      ignition-scripts-lint: ${{ steps.set-vars.outputs.ignition-scripts-lint }}
+      ignition-views-lint: ${{ steps.set-vars.outputs.ignition-views-lint }}
+      ignition-views-lint-include: ${{ steps.set-vars.outputs.ignition-views-lint-include }}
+    steps:
+      - name: Check Trigger
+        id: set-vars
+        run: |
+          if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
+            echo "shellcheck=${{ github.event.inputs.shellcheck }}" >> $GITHUB_OUTPUT
+            echo "markdownlint=${{ github.event.inputs.markdownlint }}" >> $GITHUB_OUTPUT
+            echo "yamllint=${{ github.event.inputs.yamllint }}" >> $GITHUB_OUTPUT
+            echo "ignition-scripts-lint=${{ github.event.inputs.ignition-scripts-lint }}" >> $GITHUB_OUTPUT
+            echo "ignition-views-lint=${{ github.event.inputs.ignition-views-lint }}" >> $GITHUB_OUTPUT
+            echo "ignition-views-lint-include=all" >> $GITHUB_OUTPUT
+          else
+            echo "shellcheck=true" >> $GITHUB_OUTPUT
+            echo "markdownlint=true" >> $GITHUB_OUTPUT
+            echo "yamllint=true" >> $GITHUB_OUTPUT
+            echo "ignition-scripts-lint=false" >> $GITHUB_OUTPUT
+            echo "ignition-views-lint=true" >> $GITHUB_OUTPUT
+            echo "ignition-views-lint-include=changed" >> $GITHUB_OUTPUT
+          fi
+
   repo-lint:
-    uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v0.4
+    name: Repo Lint
+    uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v1
+    needs: [set-vars]
     with:
-      shellcheck: true
-      markdownlint: true
-      yamllint: true
-      ignition-scripts-lint: false
-      ignition-views-lint: true
-      ignition-views-lint-include: 'changed'
+      shellcheck: ${{ fromJSON(needs.set-vars.outputs.shellcheck) }}
+      markdownlint: ${{ fromJSON(needs.set-vars.outputs.markdownlint) }}
+      yamllint: ${{ fromJSON(needs.set-vars.outputs.yamllint) }}
+      ignition-scripts-lint: ${{ fromJSON(needs.set-vars.outputs.ignition-scripts-lint) }}
+      ignition-views-lint: ${{ fromJSON(needs.set-vars.outputs.ignition-views-lint) }}
+      ignition-views-lint-include: ${{ needs.set-vars.outputs.ignition-views-lint-include }}

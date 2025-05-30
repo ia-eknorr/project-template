@@ -18,7 +18,7 @@ The contents of this directory are to be gateway backups from relevant ignition 
     This script will search for running ignition services in the compose stack, take a gateway backup, unzip the backup, delete the `projects` directory, re-zip the backup, and move the backup into the `gw-init` directory. The backups found in the `gw-init` directory can then be committed to the repository. Gateway backups are named according to the service name in the compose stack.
 
     > [!NOTE]
-    > This script only works in unix environments. If you are using a Windows environment, you can run the script in a WSL environment. To set up WSL, follow the instructions [here](https://github.com/ia-eknorr/ignition-version-control/blob/main/Set%20Up%20WSL.md).
+    > This script only works in unix environments. If you are using a Windows environment, you can run the script in a WSL environment. To set up WSL, [follow the instructions](https://github.com/ia-eknorr/ignition-version-control/blob/main/Set%20Up%20WSL.md).
 
 3. Add and commit the updated gateway backups to the repository.
 
