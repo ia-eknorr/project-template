@@ -1,0 +1,10 @@
+{
+  "classname": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+  "defaultPropInstructions": "Use \u003ci\u003edatabaseName\u003dYOUR_DATABASE\u003c/i\u003e to specify the database to connect to.",
+  "defaultProps": "databaseName\u003dtest",
+  "defaultTranslator": "MSSQL",
+  "defaultValidationQuery": "SELECT 1",
+  "type": "MSSQL",
+  "urlFormat": "jdbc:sqlserver://localhost\\MSSQLSERVER",
+  "urlInstructions": "\u003cbr/\u003eThe format of the SQL Server connect URL is:\u003cbr/\u003e\u003ccode\u003ejdbc:sqlserver://\u003cb\u003ehost\u003c/b\u003e\\\u003cb\u003einstanceName\u003c/b\u003e[:\u003cb\u003eport\u003c/b\u003e]\u003c/code\u003e\u003cbr/\u003eWith the three parameters (in bold) \u003cul style\u003d\"list-style-type:none;margin-left:10px;\"\u003e\u003cli\u003e\u003cb\u003ehost\u003c/b\u003e: The host name or IP address of the database server.\u003c/li\u003e\u003cli\u003e\u003cb\u003einstanceName\u003c/b\u003e: (optional) the instance to connect to on the host. If not specified, a connection to the default instance is made.\u003c/li\u003e\u003cli\u003e\u003cb\u003eport\u003c/b\u003e: (optional) the port to connect to. The default is \u003cb\u003e1433\u003c/b\u003e. If you are using the default, you can omit the port and the preceding \u0027:\u0027.\u003c/li\u003e\u003c/ul\u003e\u003cbr/\u003eFor SQL Server, you specify the \u003ci\u003edatabase name\u003c/i\u003e to connect to using the \u003ccode\u003edatabaseName\u003c/code\u003e property in the \u003ci\u003eExtra Connection Properties\u003c/i\u003e."
+}

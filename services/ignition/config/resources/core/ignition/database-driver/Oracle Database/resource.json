@@ -1,0 +1,19 @@
+{
+  "scope": "A",
+  "description": "The Oracle Database JDBC driver.",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "8.3-migration",
+      "timestamp": "2025-10-08T19:11:11Z"
+    },
+    "uuid": "dbc07b67-6688-406f-a988-f62455bd2ff2",
+    "lastModificationSignature": "7eb31a724e2c89c8a832fa8e9863983486e9a5c8b2b54f248b980ff6d664ba00",
+    "enabled": true
+  }
+}

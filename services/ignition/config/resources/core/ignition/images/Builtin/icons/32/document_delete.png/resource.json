@@ -1,0 +1,20 @@
+{
+  "scope": "A",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "document_delete.png"
+  ],
+  "attributes": {
+    "width": 32,
+    "format": "PNG",
+    "lastModification": {
+      "actor": "8.3-migration",
+      "timestamp": "2025-10-08T19:11:12Z"
+    },
+    "size": 797,
+    "lastModificationSignature": "9add4acd5ba4b8f70794fa38aed5bf67e889e5738e85962af92cb28bf7259824",
+    "height": 32
+  }
+}

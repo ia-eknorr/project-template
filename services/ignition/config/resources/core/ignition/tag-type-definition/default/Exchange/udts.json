@@ -1,0 +1,13 @@
+[
+  {
+    "name": "ExampleType",
+    "tagType": "UdtType",
+    "tags": [
+      {
+        "valueSource": "memory",
+        "name": "Tag1",
+        "tagType": "AtomicTag"
+      }
+    ]
+  }
+]

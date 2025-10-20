@@ -63,7 +63,7 @@ jobs:
 
   repo-lint:
     name: Repo Lint
-    uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v1
+    uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v2.2
     needs: [set-vars]
     with:
       shellcheck: ${{ fromJSON(needs.set-vars.outputs.shellcheck) }}

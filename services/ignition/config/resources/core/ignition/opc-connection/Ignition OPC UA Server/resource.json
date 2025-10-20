@@ -1,0 +1,19 @@
+{
+  "scope": "A",
+  "description": "A \"loopback\" connection to the Ignition OPC UA server running on this gateway.",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "8.3-migration",
+      "timestamp": "2025-10-08T19:11:12Z"
+    },
+    "uuid": "73cc7f84-88d9-486c-933d-20bfeaaafc3f",
+    "lastModificationSignature": "075d36b6f565fd92fee3dc2adf105a46061c38996fdfe3efa54565839040c8d7",
+    "enabled": true
+  }
+}

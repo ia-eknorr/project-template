@@ -1,0 +1,42 @@
+{
+  "automaticThreadDumpsCpuThreshold": 70,
+  "automaticThreadDumpsCpuThresholdExceededDuration": 10,
+  "automaticThreadDumpsEnabled": false,
+  "automaticThreadDumpsIntervalSeconds": 60,
+  "automaticThreadDumpsRetentionCount": 50,
+  "clientFallbackEnabled": false,
+  "designerRAM": "MB2048",
+  "disable3DPipeline": true,
+  "disableDirectDraw": false,
+  "enableTagReferenceStore": true,
+  "errorReportFromEmail": "",
+  "errorReportPassword": {
+    "data": {
+      "ciphertext": "O-T8NpxND6BXiRbXyDw",
+      "encrypted_key": "DZSmiz2qgk3BAr-vDHMVo1KiGNIl_LY0rwauuowbKhy4lsUkxDM4uw",
+      "iv": "Z2ktF4czPk-XFBtI",
+      "protected": "eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIiwiaWF0IjoxNzU5OTUwNjcxLCJ6aXAiOiJERUYifQ",
+      "tag": "po1YTVXp23ajRjUFjWHcJQ"
+    },
+    "type": "Embedded"
+  },
+  "errorReportSMTPServer": "",
+  "errorReportToEmail": "",
+  "errorReportUsername": "",
+  "homepageNotes": "Welcome to your Ignition Gateway. This customizable area is intended to capture the critical details you want to document for this Gateway. You might include information about the environment (production, testing, or development), key workflows, or maintenance schedules. It\u0027s also a great place to list instructions for your team, important reminders about system health, or details about your configuration that require regular review. Use this space to keep everyone informed and ensure smooth operations across the board.",
+  "homepageUrl": "/web/home",
+  "multicastEnabled": true,
+  "multicastIPAddr": "231.1.1.1",
+  "multicastIntervalMillis": "5000",
+  "multicastReceivePort": "4446",
+  "multicastSendPort": "4445",
+  "scheduledBackupFilename": "${gatewayName}_Ignition-backup-${edition}${timestamp}.gwbk",
+  "scheduledBackupPath": "",
+  "scheduledBackupRetentionCount": 5,
+  "scheduledBackupTimes": "15 1 * * *",
+  "scheduledBackupsEnabled": false,
+  "scriptMessageEncoding": "Protobuf",
+  "secondsBeforeFailover": 60,
+  "systemName": "project-name",
+  "useCondensedDialogFont": false
+}

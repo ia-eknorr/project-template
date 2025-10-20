@@ -1,0 +1,20 @@
+{
+  "scope": "A",
+  "description": "The Microsoft SQL Server JDBC Driver is a Java Database Connectivity (JDBC) 4.2 compliant driver.",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json",
+    "mssql-jdbc-9.4.0.jre11.jar"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "8.3-migration",
+      "timestamp": "2025-10-08T19:11:11Z"
+    },
+    "uuid": "e74818ac-0191-4b88-9d1b-fd1389ff1a58",
+    "lastModificationSignature": "47c82d9b559086fcf7a7fb3040c155d30adada0491fd4d912b0f148ed6860702",
+    "enabled": true
+  }
+}

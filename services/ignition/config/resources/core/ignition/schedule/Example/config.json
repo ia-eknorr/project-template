@@ -1,0 +1,30 @@
+{
+  "profile": {
+    "type": "basic schedule"
+  },
+  "settings": {
+    "allDayTime": "0:00-24:00",
+    "allDays": false,
+    "friday": false,
+    "fridayTime": "0:00-24:00",
+    "monday": false,
+    "mondayTime": "0:00-24:00",
+    "observeHolidays": true,
+    "repeatMode": "Off",
+    "repeatOff": 1,
+    "repeatOn": 1,
+    "saturday": false,
+    "saturdayTime": "0:00-24:00",
+    "startingAt": null,
+    "sunday": false,
+    "sundayTime": "0:00-24:00",
+    "thursday": false,
+    "thursdayTime": "0:00-24:00",
+    "tuesday": false,
+    "tuesdayTime": "0:00-24:00",
+    "wednesday": false,
+    "wednesdayTime": "0:00-24:00",
+    "weekDayTime": "8:00-11:45,12:30-17:00",
+    "weekDays": true
+  }
+}

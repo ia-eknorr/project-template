@@ -1,0 +1,19 @@
+{
+  "profile": {
+    "type": "internal"
+  },
+  "settings": {
+    "secrets": {
+      "db-password": {
+        "ciphertext": {
+          "ciphertext": "QZshnhoavcjVfg",
+          "encrypted_key": "MmT2XEQuLfmKj0dHURyIT0BuTJJMxgE-7W6kZTf5vL4jo9BnWkwxiQ",
+          "iv": "7wMQIa5Vdy1QZ0cj",
+          "protected": "eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIiwiaWF0IjoxNzU0NDI5NTI2LCJ6aXAiOiJERUYifQ",
+          "tag": "ckxlkktV8u9b_43pjuXCBA"
+        },
+        "description": ""
+      }
+    }
+  }
+}

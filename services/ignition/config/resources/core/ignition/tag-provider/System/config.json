@@ -1,0 +1,10 @@
+{
+  "profile": {
+    "allowBackfill": false,
+    "enableTagReferenceStore": false,
+    "type": "MANAGED"
+  },
+  "settings": {
+    "nonUseCount": 0
+  }
+}

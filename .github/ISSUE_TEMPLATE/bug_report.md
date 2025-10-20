@@ -14,10 +14,10 @@ assignees: ''
 
 ## 🔁 Steps to Reproduce
 <!--List the steps to reproduce the behavior-->
-1. 
-2. 
-3. 
-4. 
+1.
+2.
+3.
+4.
 
 ## 🎯 Expected Behavior
 <!--Describe what you expected to happen-->

@@ -1,0 +1,19 @@
+{
+  "scope": "A",
+  "description": "Template historian",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2025-10-13T18:21:41Z"
+    },
+    "uuid": "2fe15954-e9fe-417c-b026-6596418af6db",
+    "lastModificationSignature": "22fbd0a45f60a495ea4d696d1503ca48ab50d694494d352af5d6054418aa269b",
+    "enabled": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "profile": {
+    "cacheValidationTimeout": 1,
+    "failoverMode": "HARD",
+    "failoverProfile": null,
+    "lockoutAttempts": 5,
+    "lockoutEnabled": true,
+    "lockoutWindow": 15,
+    "scheduleRestricted": false,
+    "type": "INTERNAL"
+  },
+  "settings": {
+    "passwordComplexity": 1,
+    "passwordContainsPassword": false,
+    "passwordContainsUserName": false,
+    "passwordHistory": 0,
+    "passwordMaxAge": 0,
+    "passwordMaxRepeatedChars": 0,
+    "passwordMinLength": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "securityLevels": [
+    {
+      "children": [
+        {
+          "children": [],
+          "description": "Represents the roles that a user has.",
+          "name": "Roles"
+        }
+      ],
+      "description": "Represents a user who has been authenticated by the system.",
+      "name": "Authenticated"
+    }
+  ]
+}

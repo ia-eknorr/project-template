@@ -1,72 +1,95 @@
 ---
-# Common ignition gateway settings
 x-ignition-common: &ignition-common
+  image: &ignition-image inductiveautomation/ignition:8.3.0
   depends_on:
     db:
       condition: service_healthy
+    bootstrap:
+      condition: service_completed_successfully
   networks:
-    proxy:
+    proxy: {}
+
+x-ignition-environment: &ignition-environment
+  ACCEPT_IGNITION_EULA: "Y"
+  IGNITION_EDITION: standard
+  TZ: ${TZ}
 
 services:
+  bootstrap:
+    image: *ignition-image
+    entrypoint: ["/bin/bash", "-c"]
+    volumes:
+      - ignition-data:/data
+    command:
+      - |
+        for gw in gateway; do
+          if [ ! -f /data/.ignition-seed-complete ]; then
+            echo "Seeding data for gateway..." ;
+
+            # Copy base ignition data
+            cp -dpR /usr/local/bin/ignition/data/* /data/ ;
+
+            # Create local directory for keystore
+            mkdir -p /data/local ;
+
+            # Generate deterministic UUID - trim all whitespace
+            UUID=$(echo -n "${GATEWAY_NAME}" | md5sum | awk '{print $1}' | sed 's/\(........\)\(....\)\(....\)\(....\)\(............\)/\1-\2-\3-\4-\5/' | tr -d '[:space:]') ;
+            echo -n "$${UUID}" > /data/.uuid ;
+            echo "Generated UUID for $${gw}: $${UUID}" ;
+
+            # Generate keystore with correct password and alias
+            keytool -genkeypair \
+              -alias metro-key \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 3650 \
+              -keystore /data/local/metro-keystore \
+              -storepass "metro" \
+              -keypass "metro" \
+              -dname "CN=${GATEWAY_NAME}, OU=Ignition, O=MyOrganization, L=City, ST=State, C=US" \
+              -storetype PKCS12 ;
+            echo "Generated keystore for gateway" ;
+
+            echo "{}" > /data/commissioning.json ;
+            touch /data/.ignition-seed-complete ;
+
+            echo "Seeding complete for gateway." ;
+          else
+            echo "Gateway already seeded, skipping..." ;
+          fi ;
+        done ;
+        echo "Bootstrap completed successfully."
+
   gateway:
     <<: [*ignition-common]
-    image: etknorr/common-docker-ignition:8.1.48
     container_name: ${GATEWAY_NAME}
+    hostname: ${GATEWAY_NAME}
     volumes:
-      # Bind mount the data-gateway directory to the container's workdir
-      - ./data-gateway:/workdir
-      # Gwbk file to restore from
-      - ./gw-init/gateway.gwbk:/restore.gwbk
-      # Modules to be installed
-      - ./module-init/Tag-CICD.modl:/modules/Tag-CICD.modl
-      # Tags to be imported
-      - ./tags:/tags
-      # Database connection properties
-      - ./db-connections:/init-db-connections
-      # Images
-      - ./idb-images:/idb-images
-      # Translations
-      - ./localization:/localization
-    labels:
-      - traefik.enable=true
-      - traefik.hostname=${GATEWAY_NAME}
+      - ignition-data:/usr/local/bin/ignition/data
+      - ./services/ignition/projects:/usr/local/bin/ignition/data/projects
+      - ./services/ignition/config/resources/core:/usr/local/bin/ignition/data/config/resources/core
+      - ./services/ignition/config/resources/dev:/usr/local/bin/ignition/data/config/resources/dev
     environment:
-      TZ: ${TZ}
-      CONFIG_PERMISSIONS: ""
-      STATUS_PAGE_PERMISSIONS: ""
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      <<: *ignition-environment
+    labels:
+      - traefik.hostname=${GATEWAY_NAME}
+      - traefik.enable=true
     command: >
       -n ${GATEWAY_NAME}
+      -m 4096
       -h 80
       -s 443
       -a ${GATEWAY_NAME}.localtest.me
-      -r /restore.gwbk
       --
-      -Dignition.allowunsignedmodules=true
-
-  tag-import:
-    <<: [*ignition-common]
-    image: etknorr/common-docker-ignition:8.1.48
-    container_name: ${GATEWAY_NAME}-tag-import
-    depends_on:
-      gateway:
-        condition: service_healthy
-    environment:
-      TZ: ${TZ}
-    entrypoint: []
-    command: >
-      tag-import.sh -c d -d /tags -a --force --debug ${GATEWAY_NAME}:8088
-    volumes:
-      - ./scripts/tag-import.sh:/usr/local/bin/tag-import.sh
-      - ./tags:/tags
+      gateway.useProxyForwardedHeader=true
+      -Dignition.config.mode=${DEPLOYMENT_MODE:-dev}
 
   db:
-    image: postgres:17.5
+    image: postgres:17.6
     hostname: db-${GATEWAY_NAME}
     container_name: db-${GATEWAY_NAME}
     volumes:
-      - ./db-init:/docker-entrypoint-initdb.d
+      - ./services/db/init:/docker-entrypoint-initdb.d
     environment:
       TZ: ${TZ}
       POSTGRES_USER: ${DB_USER}
@@ -76,13 +99,51 @@ services:
       interval: 10s
       timeout: 20s
       retries: 10
-    # Uncomment on local for database management. Connections can be made at datadash-db.localtest.me:5430, or whichever port you set
-    # ports:
-    #   - "5430:5432"
     networks:
       proxy:
         aliases:
           - db-${GATEWAY_NAME}
+
+  config-cleanup:
+    image: alpine/git:latest
+    depends_on:
+      - gateway
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo 'Watching for config modifications...'
+        PATTERN="services/ignition/config/resources/core/ignition/*/resource.json"
+        RESTORED=false
+
+        while [ "$$RESTORED" = "false" ]; do
+          if git diff --quiet $$PATTERN 2>/dev/null; then
+            sleep 5
+          else
+            echo "Changes detected in config files! Restoring..."
+            git restore $$PATTERN 2>/dev/null
+            echo "Configs restored! Monitoring for 40 more seconds to ensure stability..."
+            RESTORED=true
+          fi
+        done
+
+        # Monitor for 40 seconds after first restore to catch any late modifications
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+          sleep 4
+          if ! git diff --quiet $$PATTERN 2>/dev/null; then
+            echo "Additional changes detected, restoring again..."
+            git restore $$PATTERN 2>/dev/null
+          fi
+        done
+
+        echo "Config cleanup complete, exiting."
+    restart: "no"
+
+volumes:
+  ignition-data:
+
 networks:
   proxy:
     external: true

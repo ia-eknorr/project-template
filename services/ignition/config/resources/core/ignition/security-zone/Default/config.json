@@ -1,0 +1,57 @@
+{
+  "directConnection": false,
+  "entityPolicies": [
+    {
+      "entityId": "AlarmJournalProvider",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "alm-query",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "alm-query",
+      "propName": "alm-shelving-allowed",
+      "propValue": "true"
+    },
+    {
+      "entityId": "AuditProfileProvider",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "diagnostic-services",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "TagHistoryProvider",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "TagProvider",
+      "propName": "impersonationRole",
+      "propValue": null
+    },
+    {
+      "entityId": "TagProvider",
+      "propName": "accessLevel",
+      "propValue": "Allow"
+    },
+    {
+      "entityId": "TagProvider",
+      "propName": "defaultTagAccess",
+      "propValue": "ReadWriteEdit"
+    }
+  ],
+  "entityZonePolicy": {
+    "priority": 0
+  },
+  "isSecure": false,
+  "scopeClient": true,
+  "scopeDesigner": true,
+  "scopeGateway": true
+}

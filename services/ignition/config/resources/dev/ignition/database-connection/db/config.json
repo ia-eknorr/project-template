@@ -1,0 +1,32 @@
+{
+  "connectURL": "jdbc:postgresql://db:5432/db",
+  "connectionProps": "",
+  "connectionResetParams": "",
+  "defaultTransactionLevel": "DEFAULT",
+  "driver": "PostgreSQL",
+  "evictionRate": -1,
+  "evictionTests": 3,
+  "evictionTime": 1800000,
+  "failoverMode": "STANDARD",
+  "includeSchemaInTableName": false,
+  "password": {
+    "data": {
+      "providerName": "internal-secret-provider",
+      "secretName": "db-password"
+    },
+    "type": "Referenced"
+  },
+  "poolInitSize": 0,
+  "poolMaxActive": 8,
+  "poolMaxIdle": 8,
+  "poolMaxWait": 5000,
+  "poolMinIdle": 0,
+  "slowQueryLogThreshold": 60000,
+  "testOnBorrow": true,
+  "testOnReturn": false,
+  "testWhileIdle": false,
+  "translator": "POSTGRES",
+  "username": "ignition",
+  "validationQuery": "SELECT 1",
+  "validationSleepTime": 10000
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "A",
+  "description": "Database connection for Project Template",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "admin",
+      "timestamp": "2025-10-15T22:45:32Z"
+    },
+    "uuid": "180fd29b-913d-4c1e-b229-152bae210a83",
+    "lastModificationSignature": "848199fc5c60f1c4387846cf50b23030900f9b5788f1399aa57cc6a81b9e5754",
+    "enabled": true
+  }
+}

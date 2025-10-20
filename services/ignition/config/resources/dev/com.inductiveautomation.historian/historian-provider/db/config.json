@@ -1,0 +1,22 @@
+{
+  "profile": {
+    "type": "SqlHistorian"
+  },
+  "settings": {
+    "database": "db",
+    "partition": {
+      "enabled": true,
+      "optimized": false,
+      "optimizedWindowSeconds": 60,
+      "size": 1,
+      "sizeUnits": "WEEK"
+    },
+    "pruning": {
+      "age": 2,
+      "ageUnits": "WEEK",
+      "enabled": true
+    },
+    "staleMultiplier": 2,
+    "trackSce": true
+  }
+}

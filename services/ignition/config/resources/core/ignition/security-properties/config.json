@@ -1,0 +1,49 @@
+{
+  "accessPermissions": {
+    "securityLevels": [],
+    "type": "AnyOf"
+  },
+  "allowDesignerSSO": false,
+  "allowUserAdmin": false,
+  "createProjectPermissions": {
+    "securityLevels": [],
+    "type": "AnyOf"
+  },
+  "createProjectRoleName": "",
+  "designerAuthStrategy": "CLASSIC",
+  "designerAuthTokenInactivityTimeout": 10,
+  "designerAuthTokenTimeToLive": 0,
+  "designerPermissions": {
+    "securityLevels": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "name": "Administrator"
+              }
+            ],
+            "name": "Roles"
+          }
+        ],
+        "name": "Authenticated"
+      }
+    ],
+    "type": "AnyOf"
+  },
+  "designerRoleName": "Administrator",
+  "forceIdpAuth": true,
+  "gatewayAuditProfile": "",
+  "readPermissions": {
+    "securityLevels": [],
+    "type": "AnyOf"
+  },
+  "systemAuthProfile": "default",
+  "systemIdentityProvider": "default",
+  "userInactivityTimeout": 10,
+  "writePermissions": {
+    "securityLevels": [],
+    "type": "AnyOf"
+  }
+}

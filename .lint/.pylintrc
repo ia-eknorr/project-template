@@ -1,0 +1,75 @@
+# Base Pylint configuration for Ignition Jython scripts (Python 2.7.18)
+# This file provides minimal, useful linting for Ignition code.py scripts.
+# Compatible with pylint 1.9.x for Python 2.7 syntax support
+#
+# Style Guide Reference:
+# - Tabs (not spaces)
+# - camelCase for variables/functions
+# - PascalCase for classes
+# - Google-style docstrings
+# - PEP-8 compliant where applicable
+
+[MASTER]
+# Python 2/3 compatibility
+python3=no
+
+[MESSAGES CONTROL]
+# Disable all checks by default, then enable only useful ones
+disable=all
+
+# Enable only essential checks for code quality and common errors
+enable=unused-variable,
+       unused-import,
+       undefined-variable,
+       used-before-assignment,
+       reimported,
+       redefined-builtin,
+       duplicate-key,
+       unreachable-code,
+       syntax-error,
+       bad-indentation,
+       unnecessary-semicolon,
+       trailing-whitespace,
+       missing-final-newline
+
+[FORMAT]
+# Use tabs for indentation (per style guide)
+indent-string='\t'
+
+# Max line length (can be adjusted as needed)
+max-line-length=120
+
+# Allow single-line if statements
+single-line-if-stmt=yes
+
+[BASIC]
+# Naming conventions using regex patterns (pylint 1.9.x style)
+# camelCase for variables/functions: starts with lowercase, then camelCase
+variable-rgx=[a-z][a-zA-Z0-9]*$
+argument-rgx=[a-z][a-zA-Z0-9]*$
+attr-rgx=[a-z][a-zA-Z0-9]*$
+function-rgx=[a-z][a-zA-Z0-9]*$
+method-rgx=[a-z][a-zA-Z0-9]*$
+
+# PascalCase for classes
+class-rgx=[A-Z][a-zA-Z0-9]*$
+
+# UPPER_CASE for constants
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Allow any module names
+module-rgx=.*$
+
+# Allow short variable names (common in scripts)
+good-names=i,j,k,x,y,z,_,db,rs,tx,e
+
+# Docstring requirements - minimal for scripts
+docstring-min-length=3
+no-docstring-rgx=^_
+
+[DESIGN]
+# Allow reasonable complexity for scripts
+max-args=10
+max-locals=25
+max-branches=20
+max-statements=75

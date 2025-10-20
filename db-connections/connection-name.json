@@ -1,9 +1,0 @@
-{
-    "name": "db",
-    "type": "POSTGRES",
-    "description": "Database connection for Project Template",
-    "connect_url": "jdbc:postgresql://db:5432/db",
-    "username": "${DB_USER}",
-    "password": "${DB_PASSWORD}",
-    "connection_props": ""
-}

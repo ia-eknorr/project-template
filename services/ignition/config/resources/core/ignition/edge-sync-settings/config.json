@@ -1,0 +1,22 @@
+{
+  "auditForwardSchedule": null,
+  "auditScheduleEnabled": false,
+  "auditSendFrequency": 10,
+  "auditSendFrequencyUnits": "SEC",
+  "historyForwardSchedule": null,
+  "historyMaxBatchSize": 10000,
+  "historyScheduleEnabled": false,
+  "historySendFrequency": 10,
+  "historySendFrequencyUnits": "SEC",
+  "journalForwardSchedule": null,
+  "journalScheduleEnabled": false,
+  "journalSendFrequency": 10,
+  "journalSendFrequencyUnits": "SEC",
+  "remoteAuditEnabled": false,
+  "remoteAuditProfileName": null,
+  "remoteHistoryEnabled": false,
+  "remoteHistoryProviderName": null,
+  "remoteJournalEnabled": false,
+  "remoteJournalName": null,
+  "remoteServerName": null
+}

@@ -3,7 +3,35 @@
   "extends": [
     "config:recommended"
   ],
+  "baseBranchPatterns": ["main", "/^release\\/.*/"],
+  "packageRules": [
+    {
+      "description": "Pin publicdemo-workflows to v14.x on release/v1",
+      "matchBaseBranches": ["release/v1"],
+      "matchPackageNames": ["inductive-automation/publicdemo-workflows"],
+      "allowedVersions": "<15.0.0"
+    },
+    {
+      "description": "Allow publicdemo-workflows v15+ on main",
+      "matchBaseBranches": ["main"],
+      "matchPackageNames": ["inductive-automation/publicdemo-workflows"],
+      "allowedVersions": ">=15.0.0"
+    },
+    {
+      "description": "Pin ignition to v8.1.x on release/v1",
+      "matchBaseBranches": ["release/v1"],
+      "matchPackageNames": ["etknorr/common-docker-ignition", "inductiveautomation/ignition"],
+      "allowedVersions": "~8.1.0"
+    },
+    {
+      "description": "Pin ignition to v8.3.x on main",
+      "matchBaseBranches": ["main"],
+      "matchPackageNames": ["inductiveautomation/ignition"],
+      "allowedVersions": "~8.3.0"
+    }
+  ],
   "ignoreDeps": [
+    "mysql",
     "python"
   ]
 }

@@ -1,26 +1,14 @@
-# VSCode workspace
+# IDE and Editor files
 *.code-workspace
+.vscode/
+.idea/
 
-# VSCode settings
-.vscode
-
-# DS_Store
+# OS-specific files
 .DS_Store
 
-# .env file
-.env
+# Environment and secrets
+*.env
 
-# Default ignition files
-**/ignition.conf
-**/logback.xml
-
-# Project stuff
+# Project conversion and migration logs
 **/projects/conversion-report.txt
-**/projects/.resources
-
-# Ignore any inbuilt theming files as well
-**/modules/com.inductiveautomation.perspective/fonts/Merriweather
-**/modules/com.inductiveautomation.perspective/fonts/NotoSans
-**/modules/com.inductiveautomation.perspective/fonts/Roboto
-**/modules/com.inductiveautomation.perspective/icons
-**.digest.json
+**/.resources/

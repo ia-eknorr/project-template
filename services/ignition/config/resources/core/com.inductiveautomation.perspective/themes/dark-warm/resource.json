@@ -1,0 +1,19 @@
+{
+  "scope": "G",
+  "description": "The dark-warm theme for Perspective.",
+  "version": 1,
+  "restricted": false,
+  "overridable": true,
+  "files": [
+    "config.json",
+    "index.css",
+    "variables.css"
+  ],
+  "attributes": {
+    "lastModification": {
+      "actor": "theme-manager",
+      "timestamp": "2025-10-08T19:11:14Z"
+    },
+    "lastModificationSignature": "61d13ddeba81f95004b75a1dd7071e4bfba6b0f28bc3c8714c4614a0f241dd81"
+  }
+}
