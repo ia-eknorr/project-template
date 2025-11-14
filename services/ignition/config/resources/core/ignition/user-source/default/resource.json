@@ -3,7 +3,7 @@
   "description": "This user source profile was automatically created during a clean startup",
   "version": 1,
   "restricted": false,
-  "overridable": false,
+  "overridable": true,
   "files": [
     "config.json",
     "users.json"

@@ -2,7 +2,7 @@
   "scope": "A",
   "version": 1,
   "restricted": false,
-  "overridable": false,
+  "overridable": true,
   "files": [
     "config.json"
   ],

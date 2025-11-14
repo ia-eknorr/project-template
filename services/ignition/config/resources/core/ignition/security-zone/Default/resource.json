@@ -3,7 +3,7 @@
   "description": "This zone cannot be edited, and will be used for zone-based settings when no other zone is matched.",
   "version": 1,
   "restricted": false,
-  "overridable": false,
+  "overridable": true,
   "files": [
     "config.json"
   ],
