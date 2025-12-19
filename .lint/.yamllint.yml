@@ -1,6 +1,9 @@
 ---
 extends: default
 
+ignore: |
+  services/
+
 rules:
   line-length: false
   truthy: false

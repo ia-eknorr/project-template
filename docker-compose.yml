@@ -17,48 +17,13 @@ x-ignition-environment: &ignition-environment
 services:
   bootstrap:
     image: *ignition-image
-    entrypoint: ["/bin/bash", "-c"]
+    user: root
+    entrypoint: ["/bin/bash", "/docker-bootstrap.sh"]
+    environment:
+      GATEWAY_NAME: ${GATEWAY_NAME}
     volumes:
       - ignition-data:/data
-    command:
-      - |
-        for gw in gateway; do
-          if [ ! -f /data/.ignition-seed-complete ]; then
-            echo "Seeding data for gateway..." ;
-
-            # Copy base ignition data
-            cp -dpR /usr/local/bin/ignition/data/* /data/ ;
-
-            # Create local directory for keystore
-            mkdir -p /data/local ;
-
-            # Generate deterministic UUID - trim all whitespace
-            UUID=$(echo -n "${GATEWAY_NAME}" | md5sum | awk '{print $1}' | sed 's/\(........\)\(....\)\(....\)\(....\)\(............\)/\1-\2-\3-\4-\5/' | tr -d '[:space:]') ;
-            echo -n "$${UUID}" > /data/.uuid ;
-            echo "Generated UUID for $${gw}: $${UUID}" ;
-
-            # Generate keystore with correct password and alias
-            keytool -genkeypair \
-              -alias metro-key \
-              -keyalg RSA \
-              -keysize 2048 \
-              -validity 3650 \
-              -keystore /data/local/metro-keystore \
-              -storepass "metro" \
-              -keypass "metro" \
-              -dname "CN=${GATEWAY_NAME}, OU=Ignition, O=MyOrganization, L=City, ST=State, C=US" \
-              -storetype PKCS12 ;
-            echo "Generated keystore for gateway" ;
-
-            echo "{}" > /data/commissioning.json ;
-            touch /data/.ignition-seed-complete ;
-
-            echo "Seeding complete for gateway." ;
-          else
-            echo "Gateway already seeded, skipping..." ;
-          fi ;
-        done ;
-        echo "Bootstrap completed successfully."
+      - ./scripts/docker-bootstrap.sh:/docker-bootstrap.sh
 
   gateway:
     <<: [*ignition-common]
@@ -106,40 +71,14 @@ services:
 
   config-cleanup:
     image: alpine/git:latest
+    restart: "no"
     depends_on:
       - gateway
     volumes:
       - .:/workspace
+      - ./scripts/docker-config-cleanup.sh:/docker-config-cleanup.sh
     working_dir: /workspace
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        echo 'Watching for config modifications...'
-        PATTERN="services/ignition/config/resources/core/ignition/*/resource.json"
-        RESTORED=false
-
-        while [ "$$RESTORED" = "false" ]; do
-          if git diff --quiet $$PATTERN 2>/dev/null; then
-            sleep 5
-          else
-            echo "Changes detected in config files! Restoring..."
-            git restore $$PATTERN 2>/dev/null
-            echo "Configs restored! Monitoring for 40 more seconds to ensure stability..."
-            RESTORED=true
-          fi
-        done
-
-        # Monitor for 40 seconds after first restore to catch any late modifications
-        for i in 1 2 3 4 5 6 7 8 9 10; do
-          sleep 4
-          if ! git diff --quiet $$PATTERN 2>/dev/null; then
-            echo "Additional changes detected, restoring again..."
-            git restore $$PATTERN 2>/dev/null
-          fi
-        done
-
-        echo "Config cleanup complete, exiting."
-    restart: "no"
+    entrypoint: ["/bin/sh", "/docker-config-cleanup.sh"]
 
 volumes:
   ignition-data:
