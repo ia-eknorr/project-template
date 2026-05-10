@@ -52,7 +52,7 @@ services:
       - ./tags:/tags
 
   db:
-    image: postgres:16.2
+    image: postgres:18.3
     hostname: db-${GATEWAY_NAME}
     container_name: db-${GATEWAY_NAME}
     volumes:
