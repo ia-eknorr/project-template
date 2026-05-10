@@ -40,3 +40,9 @@ repos:
     hooks:
       - id: yamllint
         args: ["--config-file=.lint/.yamllint.yml", "--format=standard"]
+
+  - repo: https://github.com/bw-design-group/ignition-lint
+    rev: v0.4.1
+    hooks:
+      - id: ign-lint
+        args: ['--config=.ignition-lint.json', '--files']
