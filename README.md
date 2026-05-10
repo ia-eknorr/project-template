@@ -8,12 +8,12 @@ This project template is designed as a base repository for any project, and can 
 
 If you are new to version control or just haven't used it in awhile, the following documents may be useful to get you started.
 
-* [Git Style Guide](https://github.com/ia-eknorr/ignition-git-style-guide)
-* [IA Version Control Documentation](https://github.com/ia-eknorr/ignition-version-control)
+* [Git Style Guide](https://ia-eknorr.github.io/ignition-guides/docs/reference/git-style-guide)
+* [IA Version Control Documentation](https://ia-eknorr.github.io/ignition-guides/docs/guides/version-control/intro)
 
 It is assumed that the following have been installed and set up before spinning up this stack:
 
-* [Proper workstation setup](https://github.com/ia-eknorr/ignition-version-control/blob/main/Workstation%20Setup.md)
+* [Proper workstation setup](https://ia-eknorr.github.io/ignition-guides/docs/guides/version-control/workstation-setup)
   * Git
   * Github CLI
   * Visual Studio Code
