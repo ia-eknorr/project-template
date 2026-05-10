@@ -1,0 +1,45 @@
+{
+  "NamePatternRule": {
+    "enabled": true,
+    "kwargs": {
+      "node_type_specific_rules": {
+        "component": {
+          "convention": "PascalCase",
+          "min_length": 3,
+          "severity": "error"
+        },
+        "property": {
+          "convention": "camelCase",
+          "min_length": 2,
+          "severity": "warning"
+        }
+      }
+    }
+  },
+  "PollingIntervalRule": {
+    "enabled": false
+  },
+  "PylintScriptRule": {
+    "enabled": true,
+    "kwargs": {
+      "debug": false,
+      "batch_mode": false
+    }
+  },
+  "UnusedCustomPropertiesRule": {
+    "enabled": true,
+    "kwargs": {}
+  },
+  "ExcessiveContextDataRule": {
+    "enabled": false
+  },
+  "BadComponentReferenceRule": {
+    "enabled": true,
+    "kwargs": {
+      "severity": "error"
+    }
+  },
+  "ComponentReferenceValidationRule": {
+    "enabled": false
+  }
+}
