@@ -1,9 +1,0 @@
-# Global owners
-#*                                      # uncomment this line and add a user or team to be the default owner for everything in the repo
-
-# Config files and dotfiles
-/.*                                     @inductive-automation/se-github-maintainers
-/docker-compose.yml                     @inductive-automation/se-github-maintainers
-
-# Shared resources
-/shared/ignition-gateway/*              @inductive-automation/se-github-maintainers
