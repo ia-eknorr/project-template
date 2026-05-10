@@ -1,74 +1,52 @@
 ---
-name: Repo Lint
+name: Linter
+
 on:
-  workflow_dispatch:
-    inputs:
-      ignition-views-lint:
-        description: 'Run Ignition Views Lint'
-        required: false
-        type: boolean
-        default: false
-      ignition-scripts-lint:
-        description: 'Run Ignition Scripts Lint'
-        required: false
-        type: boolean
-        default: false
-      yamllint:
-        description: 'Run YAML Lint'
-        required: false
-        type: boolean
-        default: false
-      markdownlint:
-        description: 'Run Markdown Lint'
-        required: false
-        type: boolean
-        default: false
-      shellcheck:
-        description: 'Run Shellcheck'
-        required: false
-        type: boolean
-        default: false
+  push:
   pull_request:
     branches: [main]
-jobs:
-  set-vars:
-    name: Set Variables
-    runs-on: ubuntu-latest
-    outputs:
-      shellcheck: ${{ steps.set-vars.outputs.shellcheck }}
-      markdownlint: ${{ steps.set-vars.outputs.markdownlint }}
-      yamllint: ${{ steps.set-vars.outputs.yamllint }}
-      ignition-scripts-lint: ${{ steps.set-vars.outputs.ignition-scripts-lint }}
-      ignition-views-lint: ${{ steps.set-vars.outputs.ignition-views-lint }}
-      ignition-views-lint-include: ${{ steps.set-vars.outputs.ignition-views-lint-include }}
-    steps:
-      - name: Check Trigger
-        id: set-vars
-        run: |
-          if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
-            echo "shellcheck=${{ github.event.inputs.shellcheck }}" >> $GITHUB_OUTPUT
-            echo "markdownlint=${{ github.event.inputs.markdownlint }}" >> $GITHUB_OUTPUT
-            echo "yamllint=${{ github.event.inputs.yamllint }}" >> $GITHUB_OUTPUT
-            echo "ignition-scripts-lint=${{ github.event.inputs.ignition-scripts-lint }}" >> $GITHUB_OUTPUT
-            echo "ignition-views-lint=${{ github.event.inputs.ignition-views-lint }}" >> $GITHUB_OUTPUT
-            echo "ignition-views-lint-include=all" >> $GITHUB_OUTPUT
-          else
-            echo "shellcheck=true" >> $GITHUB_OUTPUT
-            echo "markdownlint=true" >> $GITHUB_OUTPUT
-            echo "yamllint=true" >> $GITHUB_OUTPUT
-            echo "ignition-scripts-lint=false" >> $GITHUB_OUTPUT
-            echo "ignition-views-lint=true" >> $GITHUB_OUTPUT
-            echo "ignition-views-lint-include=changed" >> $GITHUB_OUTPUT
-          fi
+    types: [closed]
 
-  repo-lint:
-    name: Repo Lint
-    uses: inductive-automation/common-workflows/.github/workflows/repo-lint.yml@v2.2
-    needs: [set-vars]
-    with:
-      shellcheck: ${{ fromJSON(needs.set-vars.outputs.shellcheck) }}
-      markdownlint: ${{ fromJSON(needs.set-vars.outputs.markdownlint) }}
-      yamllint: ${{ fromJSON(needs.set-vars.outputs.yamllint) }}
-      ignition-scripts-lint: ${{ fromJSON(needs.set-vars.outputs.ignition-scripts-lint) }}
-      ignition-views-lint: ${{ fromJSON(needs.set-vars.outputs.ignition-views-lint) }}
-      ignition-views-lint-include: ${{ needs.set-vars.outputs.ignition-views-lint-include }}
+jobs:
+  shellcheck:
+    name: Lint Shell Files
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+  markdownlint:
+    name: Lint Markdown
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: |
+          npm install -g markdownlint-cli
+      - name: Run markdownlint
+        run: 'find . -name "*.md" | xargs markdownlint'
+
+  yamllint:
+    name: Lint YAML files
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run yamllint
+        run: 'find . -name "*.yml" | xargs yamllint'
+
+  lint-ignition-views:
+    name: Lint Ignition Views
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run lint-ignition-views.py
+        uses: ia-eknorr/ignition-lint@v2.2
+        with:
+          files: "**/view.json"
+          component_style: PascalCase
+          parameter_style: camelCase
