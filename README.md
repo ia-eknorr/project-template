@@ -61,8 +61,10 @@ Changes made in the Ignition Designer appear instantly in these directories - no
 ## Security
 
 By design, this template ships with the Gateway open: no login is required to browse the
-Gateway UI. This avoids the situation where a new user clones the template, brings the stack
-up, and has no way to know what credentials to use.
+Gateway UI. This is the stock behavior of `security-properties/config.json` shipped in this
+repo, where `accessPermissions`, `readPermissions`, and `writePermissions` all use an empty
+`AnyOf` list (no security levels required). It avoids the situation where a new user clones
+the template, brings the stack up, and has no way to know what credentials to use.
 
 The committed admin user still exists in
 `services/ignition/config/resources/core/ignition/user-source/default/users.json`. You only
@@ -70,8 +72,8 @@ need to authenticate for operations that require an `Administrator` role (such a
 the Designer).
 
 > [!WARNING]
-> While `forceIdpAuth` is `false`, the user-management UI is also unauthenticated. Anyone
-> with network access to the Gateway can change the `admin` password through the UI without
+> While the Gateway is open, the user-management UI is also unauthenticated. Anyone with
+> network access to the Gateway can change the `admin` password through the UI without
 > first proving they know the existing one. Treat the open-by-default Gateway as a local
 > development convenience only.
 
@@ -91,13 +93,31 @@ below.
 - Commit the updated `users.json` if you want the new credential baked into the template,
   or leave it in the runtime volume.
 
-**2. Re-enable authentication enforcement.**
+**2. Require authentication on the Gateway.**
 
 Edit `services/ignition/config/resources/core/ignition/security-properties/config.json` and
-set:
+replace the three permission blocks (`accessPermissions`, `readPermissions`,
+`writePermissions`) so they require the `Authenticated` security level:
 
 ```json
-"forceIdpAuth": true
+"accessPermissions": {
+  "securityLevels": [
+    { "children": [], "name": "Authenticated" }
+  ],
+  "type": "AllOf"
+},
+"readPermissions": {
+  "securityLevels": [
+    { "children": [], "name": "Authenticated" }
+  ],
+  "type": "AllOf"
+},
+"writePermissions": {
+  "securityLevels": [
+    { "children": [], "name": "Authenticated" }
+  ],
+  "type": "AllOf"
+}
 ```
 
 Then restart the Gateway:
@@ -106,7 +126,16 @@ Then restart the Gateway:
 docker compose restart gateway
 ```
 
-Once both steps are complete, the Gateway requires a valid login for any access.
+Once both steps are complete, the Gateway requires a valid login for any access:
+anonymous visits to `/app/home`, `/app/platform/security/user-sources`, and the rest of
+the Gateway UI return a "Not Authenticated" prompt or "Page Not Found".
+
+> [!NOTE]
+> `forceIdpAuth` (also in `security-properties/config.json`) does **not** control whether
+> login is required. Per the Ignition docs it controls SSO behavior: when `true`, the
+> Gateway always asks the IdP to re-authenticate the user by default, effectively
+> disabling Single Sign-On. Flipping it does not open or close anonymous access on its
+> own; the permission blocks above are what gate access.
 
 ## Linting
 
