@@ -69,17 +69,6 @@ services:
         aliases:
           - db-${GATEWAY_NAME}
 
-  config-cleanup:
-    image: alpine/git:latest
-    restart: "no"
-    depends_on:
-      - gateway
-    volumes:
-      - .:/workspace
-      - ./scripts/docker-config-cleanup.sh:/docker-config-cleanup.sh
-    working_dir: /workspace
-    entrypoint: ["/bin/sh", "/docker-config-cleanup.sh"]
-
 volumes:
   ignition-data:
 

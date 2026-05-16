@@ -18,7 +18,6 @@ The `main` branch runs an Ignition 8.3 stack:
 - **gateway** - Ignition gateway with bind-mounted `projects/` and `config/resources/`
 - **db** - PostgreSQL database
 - **bootstrap** - One-time setup script (runs on first start)
-- **config-cleanup** - Removes generated config files not meant for version control
 
 The gateway is exposed via [Traefik](https://traefik.io/) at `${GATEWAY_NAME}.localtest.me`.
 Traefik must be running before starting this stack - see the
