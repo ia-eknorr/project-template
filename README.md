@@ -35,7 +35,11 @@ instructions.
    cp .env.example .env
    ```
 
-3. Edit `.env` and set `GATEWAY_NAME` to a short identifier (e.g., `dev-gw`)
+3. Edit `.env`:
+   - Set `GATEWAY_NAME` to a short identifier (e.g., `dev-gw`)
+   - Change `GATEWAY_ADMIN_PASSWORD` from the default `changeme` to a password of your choice.
+     `GATEWAY_ADMIN_USERNAME` and `GATEWAY_ADMIN_PASSWORD` are the credentials you will use to
+     log in to the gateway.
 4. Start the stack:
 
    ```shell

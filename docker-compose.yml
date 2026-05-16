@@ -12,6 +12,8 @@ x-ignition-common: &ignition-common
 x-ignition-environment: &ignition-environment
   ACCEPT_IGNITION_EULA: "Y"
   IGNITION_EDITION: standard
+  GATEWAY_ADMIN_USERNAME: ${GATEWAY_ADMIN_USERNAME}
+  GATEWAY_ADMIN_PASSWORD: ${GATEWAY_ADMIN_PASSWORD}
   TZ: ${TZ}
 
 services:
