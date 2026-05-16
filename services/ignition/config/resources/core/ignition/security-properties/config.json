@@ -33,7 +33,7 @@
     "type": "AnyOf"
   },
   "designerRoleName": "Administrator",
-  "forceIdpAuth": true,
+  "forceIdpAuth": false,
   "gatewayAuditProfile": "",
   "readPermissions": {
     "securityLevels": [],

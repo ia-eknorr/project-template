@@ -58,6 +58,56 @@ The two bind-mounted directories in your repo are tracked in Git:
 
 Changes made in the Ignition Designer appear instantly in these directories - no export step needed.
 
+## Security
+
+By design, this template ships with the Gateway open: no login is required to browse the
+Gateway UI. This avoids the situation where a new user clones the template, brings the stack
+up, and has no way to know what credentials to use.
+
+The committed admin user still exists in
+`services/ignition/config/resources/core/ignition/user-source/default/users.json`. You only
+need to authenticate for operations that require an `Administrator` role (such as launching
+the Designer).
+
+> [!WARNING]
+> While `forceIdpAuth` is `false`, the user-management UI is also unauthenticated. Anyone
+> with network access to the Gateway can change the `admin` password through the UI without
+> first proving they know the existing one. Treat the open-by-default Gateway as a local
+> development convenience only.
+
+### Locking the Gateway Down
+
+Before deploying this template anywhere that is not your local machine, complete both steps
+below.
+
+**1. Change the admin password.**
+
+- Open the Gateway in your browser.
+- In the left nav, go to `Platform` -> expand `Security` -> `User Sources`.
+- On the `default` user source row, click the kebab (`show-more`) menu and choose
+  `Manage Users`.
+- In the drawer that opens, click the kebab on the `admin` row and choose `Edit`.
+- Tick `Change Password`, enter the new password in both fields, and click `Save Changes`.
+- Commit the updated `users.json` if you want the new credential baked into the template,
+  or leave it in the runtime volume.
+
+**2. Re-enable authentication enforcement.**
+
+Edit `services/ignition/config/resources/core/ignition/security-properties/config.json` and
+set:
+
+```json
+"forceIdpAuth": true
+```
+
+Then restart the Gateway:
+
+```shell
+docker compose restart gateway
+```
+
+Once both steps are complete, the Gateway requires a valid login for any access.
+
 ## Linting
 
 Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
