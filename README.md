@@ -58,6 +58,31 @@ The two bind-mounted directories in your repo are tracked in Git:
 
 Changes made in the Ignition Designer appear instantly in these directories - no export step needed.
 
+## Security
+
+By design, this template ships with the Gateway open: no login is required to browse the
+Gateway UI. This is the stock behavior of `security-properties/config.json` shipped in this
+repo, where `accessPermissions`, `readPermissions`, and `writePermissions` all use an empty
+`AnyOf` list (no security levels required). It avoids the situation where a new user clones
+the template, brings the stack up, and has no way to know what credentials to use.
+
+The committed admin user still exists in
+`services/ignition/config/resources/core/ignition/user-source/default/users.json`. You only
+need to authenticate for operations that require an `Administrator` role (such as launching
+the Designer).
+
+> [!WARNING]
+> While the Gateway is open, the user-management UI is also unauthenticated. Anyone with
+> network access to the Gateway can change the `admin` password through the UI without
+> first proving they know the existing one. Treat the open-by-default Gateway as a local
+> development convenience only.
+
+### Locking the Gateway Down
+
+Before any non-local deployment, change the `admin` password and require the
+`Authenticated` security level on the Gateway's Access/Read/Write permissions. Both
+are under `Platform -> Security` in the Gateway web UI.
+
 ## Linting
 
 Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
