@@ -87,3 +87,7 @@ are under `Platform -> Security` in the Gateway web UI.
 
 Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
 [ignition-guides](https://ia-eknorr.github.io/ignition-guides/) for details.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
