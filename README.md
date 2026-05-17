@@ -79,13 +79,9 @@ the Designer).
 
 ### Locking the Gateway Down
 
-Before deploying this template anywhere that is not your local machine, do both of the
-following from the Gateway web UI:
-
-1. Change the `admin` password under `Platform -> Security -> User Sources -> default`.
-2. Set the `Access`, `Read`, and `Write` permissions under
-   `Platform -> Security -> Gateway General Security Settings` to require the
-   `Authenticated` security level.
+Before any non-local deployment, change the `admin` password and require the
+`Authenticated` security level on the Gateway's Access/Read/Write permissions. Both
+are under `Platform -> Security` in the Gateway web UI.
 
 ## Linting
 
