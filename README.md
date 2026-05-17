@@ -89,5 +89,4 @@ are under `Platform -> Security` in the Gateway web UI.
 
 ## Linting
 
-Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
-[ignition-guides](https://ia-eknorr.github.io/ignition-guides/) for details.
+Pull requests run [shellcheck](https://www.shellcheck.net/), [markdownlint](https://github.com/DavidAnson/markdownlint), [yamllint](https://yamllint.readthedocs.io/), and [ignition-lint](https://ia-eknorr.github.io/ignition-guides/docs/tools/ignition-lint) automatically. To run them locally before pushing, install [pre-commit](https://pre-commit.com/) and run `pre-commit run --all-files`. The configuration lives in `.pre-commit-config.yaml`.
