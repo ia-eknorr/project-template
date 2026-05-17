@@ -130,13 +130,6 @@ Once both steps are complete, the Gateway requires a valid login for any access:
 anonymous visits to `/app/home`, `/app/platform/security/user-sources`, and the rest of
 the Gateway UI return a "Not Authenticated" prompt or "Page Not Found".
 
-> [!NOTE]
-> `forceIdpAuth` (also in `security-properties/config.json`) does **not** control whether
-> login is required. Per the Ignition docs it controls SSO behavior: when `true`, the
-> Gateway always asks the IdP to re-authenticate the user by default, effectively
-> disabling Single Sign-On. Flipping it does not open or close anonymous access on its
-> own; the permission blocks above are what gate access.
-
 ## Linting
 
 Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
