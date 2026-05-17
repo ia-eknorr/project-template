@@ -79,56 +79,13 @@ the Designer).
 
 ### Locking the Gateway Down
 
-Before deploying this template anywhere that is not your local machine, complete both steps
-below.
+Before deploying this template anywhere that is not your local machine, do both of the
+following from the Gateway web UI:
 
-**1. Change the admin password.**
-
-- Open the Gateway in your browser.
-- In the left nav, go to `Platform` -> expand `Security` -> `User Sources`.
-- On the `default` user source row, click the kebab (`show-more`) menu and choose
-  `Manage Users`.
-- In the drawer that opens, click the kebab on the `admin` row and choose `Edit`.
-- Tick `Change Password`, enter the new password in both fields, and click `Save Changes`.
-- Commit the updated `users.json` if you want the new credential baked into the template,
-  or leave it in the runtime volume.
-
-**2. Require authentication on the Gateway.**
-
-Edit `services/ignition/config/resources/core/ignition/security-properties/config.json` and
-replace the three permission blocks (`accessPermissions`, `readPermissions`,
-`writePermissions`) so they require the `Authenticated` security level:
-
-```json
-"accessPermissions": {
-  "securityLevels": [
-    { "children": [], "name": "Authenticated" }
-  ],
-  "type": "AllOf"
-},
-"readPermissions": {
-  "securityLevels": [
-    { "children": [], "name": "Authenticated" }
-  ],
-  "type": "AllOf"
-},
-"writePermissions": {
-  "securityLevels": [
-    { "children": [], "name": "Authenticated" }
-  ],
-  "type": "AllOf"
-}
-```
-
-Then restart the Gateway:
-
-```shell
-docker compose restart gateway
-```
-
-Once both steps are complete, the Gateway requires a valid login for any access:
-anonymous visits to `/app/home`, `/app/platform/security/user-sources`, and the rest of
-the Gateway UI return a "Not Authenticated" prompt or "Page Not Found".
+1. Change the `admin` password under `Platform -> Security -> User Sources -> default`.
+2. Set the `Access`, `Read`, and `Write` permissions under
+   `Platform -> Security -> Gateway General Security Settings` to require the
+   `Authenticated` security level.
 
 ## Linting
 
