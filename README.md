@@ -44,7 +44,11 @@ instructions.
 
 5. Open `http://${GATEWAY_NAME}.localtest.me` in your browser
 
-For a full walkthrough see the [Hands-On Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/git-ignition-lab).
+For step-by-step walkthroughs using this template, see ignition-guides:
+
+- [Docker Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/docker-ignition-lab) - start here. Bring the gateway up, watch each service boot, and practice day-two operations.
+- [Version Control Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/version-control-lab) - track this project in Git with branches, pull requests, and merges.
+- [Helm Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/helm-ignition-lab) - deploy Ignition to a local Kubernetes cluster using the official Helm chart.
 
 ## Version Control
 
@@ -85,8 +89,7 @@ are under `Platform -> Security` in the Gateway web UI.
 
 ## Linting
 
-Pull requests run shellcheck, markdownlint, yamllint, and ignition-lint automatically. See the
-[ignition-guides](https://ia-eknorr.github.io/ignition-guides/) for details.
+Pull requests run [shellcheck](https://www.shellcheck.net/), [markdownlint](https://github.com/DavidAnson/markdownlint), [yamllint](https://yamllint.readthedocs.io/), and [ignition-lint](https://ia-eknorr.github.io/ignition-guides/docs/tools/ignition-lint) automatically. To run them locally before pushing, install [pre-commit](https://pre-commit.com/) and run `pre-commit run --all-files`. The configuration lives in `.pre-commit-config.yaml`.
 
 ## License
 
