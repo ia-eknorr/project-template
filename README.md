@@ -44,7 +44,7 @@ instructions.
 
 5. Open `http://${GATEWAY_NAME}.localtest.me` in your browser
 
-For a full walkthrough see the [Hands-On Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/git-ignition-lab).
+For a full walkthrough see the [Version Control Lab](https://ia-eknorr.github.io/ignition-guides/docs/labs/version-control-lab).
 
 ## Version Control
 
