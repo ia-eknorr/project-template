@@ -1,6 +1,6 @@
 ---
 x-ignition-common: &ignition-common
-  image: &ignition-image inductiveautomation/ignition:8.3.6
+  image: &ignition-image inductiveautomation/ignition:8.3.7
   depends_on:
     db:
       condition: service_healthy
