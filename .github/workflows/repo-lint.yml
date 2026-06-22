@@ -12,7 +12,7 @@ jobs:
     name: Lint Shell Files
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
 
@@ -20,7 +20,7 @@ jobs:
     name: Lint Markdown
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
@@ -39,7 +39,7 @@ jobs:
     name: Lint YAML files
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Run yamllint
         run: 'yamllint -c .lint/.yamllint.yml .'
 
@@ -47,7 +47,7 @@ jobs:
     name: Lint Ignition Views
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
