@@ -21,7 +21,7 @@ The `main` branch runs an Ignition 8.3 stack:
 
 The gateway is exposed via [Traefik](https://traefik.io/) at `${GATEWAY_NAME}.localtest.me`.
 Traefik must be running before starting this stack - see the
-[setup guide](https://etknorr.github.io/ignition-guides/docs/getting-started/traefik) for
+[setup guide](https://knorrlabs.github.io/ignition-guides/docs/getting-started/traefik) for
 instructions.
 
 ## Quick Start
@@ -46,9 +46,9 @@ instructions.
 
 For step-by-step walkthroughs using this template, see ignition-guides:
 
-- [Docker Lab](https://etknorr.github.io/ignition-guides/docs/labs/docker-ignition-lab) - start here. Bring the gateway up, watch each service boot, and practice day-two operations.
-- [Version Control Lab](https://etknorr.github.io/ignition-guides/docs/labs/version-control-lab) - track this project in Git with branches, pull requests, and merges.
-- [Helm Lab](https://etknorr.github.io/ignition-guides/docs/labs/helm-ignition-lab) - deploy Ignition to a local Kubernetes cluster using the official Helm chart.
+- [Docker Lab](https://knorrlabs.github.io/ignition-guides/docs/labs/docker-ignition-lab) - start here. Bring the gateway up, watch each service boot, and practice day-two operations.
+- [Version Control Lab](https://knorrlabs.github.io/ignition-guides/docs/labs/version-control-lab) - track this project in Git with branches, pull requests, and merges.
+- [Helm Lab](https://knorrlabs.github.io/ignition-guides/docs/labs/helm-ignition-lab) - deploy Ignition to a local Kubernetes cluster using the official Helm chart.
 
 ## Version Control
 
@@ -89,7 +89,7 @@ are under `Platform -> Security` in the Gateway web UI.
 
 ## Linting
 
-Pull requests run [shellcheck](https://www.shellcheck.net/), [markdownlint](https://github.com/DavidAnson/markdownlint), [yamllint](https://yamllint.readthedocs.io/), and [ignition-lint](https://etknorr.github.io/ignition-guides/docs/tools/ignition-lint) automatically. To run them locally before pushing, install [pre-commit](https://pre-commit.com/) and run `pre-commit run --all-files`. The configuration lives in `.pre-commit-config.yaml`.
+Pull requests run [shellcheck](https://www.shellcheck.net/), [markdownlint](https://github.com/DavidAnson/markdownlint), [yamllint](https://yamllint.readthedocs.io/), and [ignition-lint](https://knorrlabs.github.io/ignition-guides/docs/tools/ignition-lint) automatically. To run them locally before pushing, install [pre-commit](https://pre-commit.com/) and run `pre-commit run --all-files`. The configuration lives in `.pre-commit-config.yaml`.
 
 ## License
 
