@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>knorrlabs/.github"],
+  "extends": ["github>knorrlabs/renovate-config"],
   "packageRules": [
     {
       "description": "Track the 8.3 line of Ignition only.",
