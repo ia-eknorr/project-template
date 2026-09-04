@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "reviewers": ["etknorr"],
+  "extends": ["github>knorrlabs/renovate-config"],
   "packageRules": [
     {
+      "description": "Track the 8.3 line of Ignition only.",
       "matchPackageNames": ["inductiveautomation/ignition"],
       "allowedVersions": "~8.3.0"
     }
